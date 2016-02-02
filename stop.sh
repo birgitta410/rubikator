@@ -1,3 +1,3 @@
 #!/bin/bash
 
-kill `pgrep -f "node server"`
+kill `pgrep -f "node rubikator"`

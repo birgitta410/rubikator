@@ -1,5 +1,5 @@
 #!/bin/bash
 
-kill `pgrep -f "node server"`
-rm server.log
-node server > server.log &
+kill `pgrep -f "node rubikator"`
+rm rubikator.log
+node rubikator > rubikator.log &

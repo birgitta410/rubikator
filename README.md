@@ -34,6 +34,9 @@ http://localhost:5555
 Create file `config.yml` in the root of the project and configure as described below.
 
 ### Access to Go CD
+
+The dashboard will only show the Go.CD stages that are either active (building, scheduled, ...) or failed. It will NOT show successful stages!
+
 ```
 default:
   gocd:

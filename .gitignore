@@ -1,0 +1,6 @@
+node_modules
+.idea
+*.iml
+*.log
+config.yml
+*.pem

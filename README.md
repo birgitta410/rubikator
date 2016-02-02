@@ -22,7 +22,7 @@ Configure access to your Go CD server (see below)
 
 Start server
 ```
-node server
+node rubikator
 ```
 
 Local application URL
@@ -32,6 +32,19 @@ http://localhost:5555
 
 ## Configure
 Create file `config.yml` in the root of the project and configure as described below.
+
+### Team message
+(This does not require configuration)
+
+Team members can send a message to be displayed at the top of the dashboard, e.g. "I broke the build, looking into it (bb)". It will only ever show the latest message it received.
+
+This is currently in progress and done very crudely with an unauthenticated GET request:
+
+```
+https://localhost:5555/messenger?message=Broke the build, sorry (bb)
+```
+
+Syncing up the message might take a few seconds.
 
 ### Access to Go CD
 

@@ -4,19 +4,19 @@ html {
 
 @media (max-width: 800px) {
     html {
-        font-size: 1vw;
+        font-size: 0.6vw;
     }
 }
 
 @media (max-width: 1200px) {
     html {
-        font-size: 1.5vw;
+        font-size: 1vw;
     }
 }
 
 @media (max-width: 2500px) {
     html {
-        font-size: 2.5vw;
+        font-size: 1.2vw;
     }
 }
 
@@ -91,12 +91,11 @@ div {
     flex: 1;
 }
 
-
-.content-wrapper {
+.content {
     margin: 2vw 2vw 0 0;
 }
 
-.content {
+.content >div {
     margin: 0;
     padding: 1vw;
 }
@@ -128,6 +127,8 @@ div {
     position: relative;
     padding-left: 3vw;
     padding-top: 2vw;
+
+    /*margin-right: 0;*/
 }
 .category .rotate {
     transform-origin: top left;

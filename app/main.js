@@ -21,29 +21,30 @@ var RubikVisualisation = function() {
     '</div>'
   }
 
-  function createRowsOfBoxesForEnvironment(rootDiv, data, environmentId, createSubBox) {
+  function createRowsOfBoxesForEnvironment(rootDiv, data, environmentId, contentAppender) {
     var environmentData = data[environmentId];
 
-    var boxWrapper = $('<div class="box-wrapper flex-column environment-box default-color"></div>').appendTo(rootDiv);
+    var outerColumn = $('<div class="flex-column"></div>').appendTo(rootDiv);
+    $('<div class="flex-row details title small">' + environmentId + '</div>').appendTo(outerColumn);
 
-    var flexRow = '<div class="sub-boxes flex-row flex-box"></div>';
+    var flexRow = '<div class="flex-row"></div>';
 
     var cell = 0;
     var maxColumns = 3;
     var row = 0;
 
-    $('<div class="flex-box environment-title">' + environmentId + '</div>').appendTo(boxWrapper);
+    $('<div class="flex-box environment-title">' + environmentId + '</div>').appendTo(outerColumn);
 
     var currentRow;
 
     _.each(_.keys(environmentData), function(environmentDataKey) {
       if(cell % maxColumns === 0) {
-        currentRow = $(flexRow).appendTo(boxWrapper);
+        currentRow = $(flexRow).appendTo(outerColumn);
         row ++;
       }
-      var newBox = $(createSubBox(environmentData, environmentDataKey)).appendTo(currentRow);
-      newBox.addClass('sub-status');
-      newBox.addClass('flex-box');
+      var newBox = $('<div class="content flex-column detail"></div>').appendTo(currentRow);
+      contentAppender(newBox, environmentData, environmentDataKey);
+
       cell ++;
     });
 
@@ -57,7 +58,19 @@ var RubikVisualisation = function() {
   }
 
   function createNewMainRow(id) {
-    return $('<div class="box-row flexbox" id="' + id + '"></div>').appendTo($('.container'));
+    return $('<div class="box-row flexbox" id="' + id + '"></div>').appendTo($('#container'));
+  }
+
+  function createNewRow() {
+    return $('<div class="flex-row"></div>').appendTo($('#container'));
+  }
+
+  function createNewColumn() {
+    return $('<div class="flex-column"></div>').appendTo($('#container'));
+  }
+
+  function createContentBoxSmall(parent) {
+    return $('<div class="content flex-column detail"></div>').appendTo(parent);
   }
 
   return {
@@ -66,7 +79,10 @@ var RubikVisualisation = function() {
     createBoxHtmlInfo: createBoxHtmlInfo,
     createBoxHtml: createBoxHtml,
     createRowsOfBoxesForEnvironment: createRowsOfBoxesForEnvironment,
-    createNewMainRow: createNewMainRow
+    createNewMainRow: createNewMainRow,
+    createNewRow: createNewRow,
+    createNewColumn: createNewColumn,
+    createContentBoxSmall: createContentBoxSmall
   };
 
 };

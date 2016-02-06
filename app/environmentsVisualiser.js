@@ -1,36 +1,36 @@
 
 var EnvironmentsVisualiser = function(rubikVisualiser) {
 
-  var rowDiv = rubikVisualiser.createNewMainRow('row-environments');
-  rowDiv.addClass('small');
-  rowDiv.hide();
+  var environmentsDiv = rubikVisualiser.createNewColumn();
+  environmentsDiv.addClass('medium');
+  $('<div class="category horizontal"><div>ENVS</div></div>').appendTo(environmentsDiv);
+  environmentsDiv.hide();
 
   function processNewDataEnvironments(data) {
     if(data.warning) {
       return;
     }
 
-    rowDiv.show();
-    rowDiv.empty();
+    environmentsDiv.show();
+    environmentsDiv.empty();
 
     _.each(_.keys(data), function(envIdentifier) {
 
-      function createStatusBox(environmentData, environmentDataKey) {
+      function createStatusBox(outerBox, environmentData, environmentDataKey) {
 
         var checkResult = environmentData[environmentDataKey];
 
         var color = checkResult.status === 'OK' ? 'green' : 'red';
-        return '<div class="sub-status flex-box ' + color + '">' +
+        outerBox.addClass(color);
+        $('<div>' +
           checkResult.id + '</br>' +
-          (checkResult.value || '-')+ '</div>';
+          (checkResult.value || '-')+ '</div>').appendTo(outerBox);
 
       }
 
-      rubikVisualiser.createRowsOfBoxesForEnvironment(rowDiv, data, envIdentifier, createStatusBox);
+      rubikVisualiser.createRowsOfBoxesForEnvironment(environmentsDiv, data, envIdentifier, createStatusBox);
 
     });
-
-    $(rubikVisualiser.createBoxHtmlInfo('ENVS', 'small default-color')).appendTo(rowDiv);
 
   }
 

@@ -1,8 +1,8 @@
 var MessengerVisualiser = function (rubikVisualiser) {
 
-  var messageRow = rubikVisualiser.createNewMainRow('row-message');
-  messageRow.removeClass('box-row');
-  messageRow.removeClass('flexbox');
+  var messageRow = $('<div class="flex-column"></div>').prependTo($('.box-container'));
+  messageRow.addClass('small');
+  var contentDiv = $('<div class="content grey"><div></div></div>').appendTo(messageRow);
   messageRow.hide();
 
   function processMessenger(data) {
@@ -12,7 +12,7 @@ var MessengerVisualiser = function (rubikVisualiser) {
       messageRow.hide();
     } else {
       messageRow.show();
-      messageRow.html(data);
+      contentDiv.html(data);
     }
 
   }

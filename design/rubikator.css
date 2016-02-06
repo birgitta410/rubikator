@@ -42,7 +42,7 @@ body {
 }
 
 .box-container {
-    height: 100%;
+    height: 98%;
     width: 100%;
 
     display: -webkit-box;
@@ -51,7 +51,7 @@ body {
     display: -webkit-flex;
     display: flex;
 
-    position: relative;
+    position: fixed;
 }
 
 div {
@@ -93,11 +93,11 @@ div {
 }
 
 .medium {
-    -webkit-box-flex: 6;
-    -moz-box-flex: 6;
-    -webkit-flex: 6;
-    -ms-flex: 6;
-    flex: 6;
+    -webkit-box-flex: 8;
+    -moz-box-flex: 8;
+    -webkit-flex: 8;
+    -ms-flex: 8;
+    flex: 8;
 }
 
 .small {
@@ -154,7 +154,7 @@ div {
     -ms-flex: 1;
     flex: 1;
 
-    margin: 2vw 2vw 0 0;
+    margin: 1vw 2vw 0 0;
     padding: 1vw;
 
     text-align: center;
@@ -168,7 +168,7 @@ div {
 }
 
 .title.details {
-    margin: 2vw 1vw 0 0;
+    margin: 1vw 1vw 0 0;
 }
 
 .category {
@@ -180,15 +180,27 @@ div {
     padding-top: 2vw;
 
 }
+
+.category.horizontal {
+    margin-right: 1vw;
+    margin-top: 0.5vw;
+    max-height: 1.8vw;
+    padding: 1vw;
+}
+
+.category > div {
+    text-align: center;
+}
+
 .category .rotate {
+    position: absolute;
+    display: inline-block;
+
     transform-origin: top left;
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
     transform: rotate(90deg);
 
-    display: inline-block;
-    text-align: center;
-    position: absolute;
 }
 
 .category.left .rotate {
@@ -241,4 +253,50 @@ div {
 .grey {
     background-color: #cccccc !important;
     color: #000;
+}
+
+.throb {
+    -webkit-animation: pulsate 2s ease-out;
+    -webkit-animation-iteration-count: infinite;
+    -ms-animation: pulsate 2s ease-out;
+    -ms-animation-iteration-count: infinite;
+    -moz-animation: pulsate 2s ease-out;
+    -moz-animation-iteration-count: infinite;
+    animation: pulsate 2s ease-out;
+    animation-iteration-count: infinite;
+    z-index: 999;
+}
+@-webkit-keyframes pulsate {
+    0% {
+        -webkit-transform: scale(0.95, 0.95);
+    }
+    50% {
+        -webkit-transform: scale(1.00, 1.00);
+    }
+    100% {
+        -webkit-transform: scale(1.05, 1.05);
+    }
+}
+
+@keyframes pulsate {
+    0% {
+        transform: scale(0.95, 0.95);
+    }
+    50% {
+        transform: scale(1.00, 1.00);
+    }
+    100% {
+        transform: scale(1.05, 1.05);
+    }
+}
+@-moz-keyframes pulsate {
+    0% {
+        -moz-transform: scale(0.95, 0.95);
+    }
+    50% {
+        -moz-transform: scale(1.0, 1.0);
+    }
+    100% {
+        -moz-transform: scale(1.05, 1.05);
+    }
 }

@@ -3,7 +3,6 @@ var EnvironmentsVisualiser = function(rubikVisualiser) {
 
   var environmentsDiv = rubikVisualiser.createNewColumn();
   environmentsDiv.addClass('medium');
-  $('<div class="category horizontal"><div>ENVS</div></div>').appendTo(environmentsDiv);
   environmentsDiv.hide();
 
   function processNewDataEnvironments(data) {
@@ -13,6 +12,7 @@ var EnvironmentsVisualiser = function(rubikVisualiser) {
 
     environmentsDiv.show();
     environmentsDiv.empty();
+    $('<div class="category horizontal"><div>ENVS</div></div>').appendTo(environmentsDiv);
 
     _.each(_.keys(data), function(envIdentifier) {
 

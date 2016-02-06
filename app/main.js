@@ -33,8 +33,6 @@ var RubikVisualisation = function() {
     var maxColumns = 3;
     var row = 0;
 
-    $('<div class="flex-box environment-title">' + environmentId + '</div>').appendTo(outerColumn);
-
     var currentRow;
 
     _.each(_.keys(environmentData), function(environmentDataKey) {

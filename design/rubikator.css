@@ -4,19 +4,19 @@ html {
 
 @media (max-width: 800px) {
     html {
-        font-size: 0.6vw;
+        font-size: 1vw;
     }
 }
 
 @media (max-width: 1200px) {
     html {
-        font-size: 1vw;
+        font-size: 1.5vw;
     }
 }
 
 @media (max-width: 2500px) {
     html {
-        font-size: 2vw;
+        font-size: 1.8vw;
     }
 }
 
@@ -63,6 +63,7 @@ div {
     -webkit-flex: 10;
     -ms-flex: 10;
     flex: 10;
+
     -webkit-justify-content: center;
     -moz-justify-content: center;
     justify-content: center;
@@ -109,6 +110,8 @@ div {
 
 .content {
     margin: 2vw 2vw 0 0;
+
+    align-items: center;
 }
 
 .content.detail {
@@ -132,7 +135,15 @@ div {
 }
 
 .content .heading {
-    font-style: ;
+    text-decoration: underline;
+    word-break: break-all;
+}
+
+.content img {
+    clear: right;
+    float: left;
+    margin: 1vw 1vw 0 0;
+    max-height: 12vw;
 }
 
 

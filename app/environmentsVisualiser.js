@@ -2,7 +2,7 @@
 var EnvironmentsVisualiser = function(rubikVisualiser) {
 
   var environmentsDiv = rubikVisualiser.createNewColumn();
-  environmentsDiv.addClass('medium');
+  environmentsDiv.addClass('small');
   environmentsDiv.hide();
 
   function processNewDataEnvironments(data) {
@@ -28,7 +28,7 @@ var EnvironmentsVisualiser = function(rubikVisualiser) {
 
       }
 
-      rubikVisualiser.createRowsOfBoxesForEnvironment(environmentsDiv, data, envIdentifier, createStatusBox);
+      rubikVisualiser.createRowsOfBoxesForEnvironment(environmentsDiv, data, envIdentifier, createStatusBox, 2);
 
     });
 

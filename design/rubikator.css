@@ -143,7 +143,8 @@ div {
     clear: right;
     float: left;
     margin: 1vw 1vw 0 0;
-    max-height: 12vw;
+    /*max-height: 12vw;*/
+    max-width: 70%;
 }
 
 
@@ -184,7 +185,7 @@ div {
 .category.horizontal {
     margin-right: 1vw;
     margin-top: 0.5vw;
-    max-height: 1.8vw;
+    max-height: 3.9vw;
     padding: 1vw;
 }
 

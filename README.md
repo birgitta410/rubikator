@@ -50,6 +50,8 @@ Syncing up the message might take a few seconds.
 
 The dashboard will only show the Go.CD stages that are either active (building, scheduled, ...) or failed. It will NOT show successful stages!
 
+Animated gifs powered by [Giphy](https://github.com/Giphy/GiphyAPI). Change search terms [here](server/giphyReader.js).
+
 ```
 default:
   gocd:

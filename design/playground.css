@@ -143,8 +143,7 @@ div {
     clear: right;
     float: left;
     margin: 1vw 1vw 0 0;
-    /*max-height: 12vw;*/
-    max-width: 70%;
+    max-height: 12vw;
 }
 
 

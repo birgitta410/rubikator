@@ -43,7 +43,7 @@ body {
 
 .box-container {
     height: 98%;
-    width: 100%;
+    width: 98%;
 
     display: -webkit-box;
     display: -moz-box;
@@ -52,6 +52,8 @@ body {
     display: flex;
 
     position: fixed;
+    left: 1.5vw;
+    bottom: 1vw;
 }
 
 div {
@@ -81,6 +83,14 @@ div {
 
 .flex-column.wrapper-column:first-child {
     margin: 0 0 2vw 2vw;
+}
+
+.wrapper-column > .flex-column:last-child .flex-row {
+    margin-right: 0;
+}
+
+.wrapper-column > .flex-column:last-child .flex-row .content:last-child {
+    margin-right: 1vw;
 }
 
 .flex-row {
@@ -148,6 +158,14 @@ div {
     /*max-width: 70%;*/
 }
 
+.message {
+    margin: 1vw 1vw 1vw 0;
+    align-items: center;
+}
+
+.message > div {
+    margin-top: 1vw;
+}
 
 .title, .category {
     -webkit-box-flex: 1;

@@ -39,15 +39,19 @@ function elkReader() {
 
     request(requestOptions, function (error, response, body) {
       if(error) {
-        defer.reject('failed to get ' + requestOptions.url, error);
+        console.log("ERROR", 'failed to get ' + requestOptions.url, error);
+        defer.resolve(undefined);
       } else {
         var result = JSON.parse(body);
         var metric = {};
         metric[identifier] = {
-          hits: result.hits.total || 0,
+          hits: result.hits ? result.hits.total || 0 : '?',
           description: queryConfig.description,
           type: queryConfig.type
         };
+        if(result.hits === undefined) {
+          console.log("WARNING", "No hits for", requestOptions.url, queryConfig.query);
+        }
         defer.resolve(metric);
       }
     });
@@ -79,7 +83,9 @@ function elkReader() {
     })).then(function(envMetrics) {
       var resultForAllEnvironments = {};
       _.each(envMetrics, function(envMetric) {
-        resultForAllEnvironments = _.extend(resultForAllEnvironments, envMetric);
+        if(envMetric !== undefined) {
+          resultForAllEnvironments = _.extend(resultForAllEnvironments, envMetric);
+        }
       });
       return resultForAllEnvironments;
     }).fail(function(error) {

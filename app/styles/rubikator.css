@@ -54,6 +54,10 @@ body {
     overflow: hidden;
 }
 
+h3 {
+    font-size: 2rem;
+}
+
 .box-container {
     height: 98%;
     width: 98%;
@@ -146,7 +150,7 @@ div {
 
 .content > div {
     margin: 0;
-    padding: 1vw;
+    padding: 0.8vw 1vw 1vw 1vw;
 }
 
 .content .metric {

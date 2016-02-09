@@ -81,23 +81,11 @@ var GocdVisualiser = function(rubikVisualiser) {
       newColumn.addClass("content");
       newColumn.addClass(rubikVisualiser.randomColdColor());
 
-      var boxText = '<img src="' + data[0].success +'"/>ALL GOOD';
+      var boxText = '<h3>ALL GOOD</h3><img src="' + data[0].success +'"/>';
       $('<div>' + boxText + '</div>').appendTo(newColumn);
 
-      //$('<div class="box-row flexbox build-row" id="row' +row+ '"></div>').appendTo(container);
-      //var newBox = $(rubikVisualiser.createBoxHtmlInfo('ALL GOOD <img src="' + data[0].success +'"/>')).appendTo($('#row' + row));
-      //newBox.addClass(rubikVisualiser.randomColdColor());
     }
 
-    //$('.giphy').each(function() {
-    //  var parentHeight = $(this).parents('.box-wrapper').height();
-    //  var parentWidth = $(this).parents('.box-wrapper').width();
-    //  var parentRatio = parentWidth/parentHeight;
-    //  var heightFactor = parentRatio > 3 ? 0.8 : 0.5;
-    //
-    //  var giphy = $(this).find('img');
-    //  giphy.attr("height", (parentHeight * heightFactor) + 'px');
-    //});
 
   }
   

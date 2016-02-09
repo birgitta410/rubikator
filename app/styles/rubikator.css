@@ -14,16 +14,22 @@ html {
     }
 }
 
-@media (max-width: 2500px) {
+@media (max-width: 3000px) {
     html {
         font-size: 1.8vw;
     }
+
 }
+
 
 @media (max-width: 5000px) {
     html {
-        font-size: 2vw;
+        font-size: 1.8vw;
     }
+    .content img {
+        height: 20vw;
+    }
+
 }
 
 
@@ -160,7 +166,7 @@ div {
     clear: right;
     float: left;
     margin: 1vw 1vw 0 0;
-    max-height: 12vw;
+    /*max-height: 12vw;*/
     /*max-height: 70%;*/
     /*max-width: 70%;*/
 }

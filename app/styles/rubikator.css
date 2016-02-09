@@ -20,6 +20,13 @@ html {
     }
 }
 
+@media (max-width: 5000px) {
+    html {
+        font-size: 2vw;
+    }
+}
+
+
 body {
     height: 100%;
     width: 100%;

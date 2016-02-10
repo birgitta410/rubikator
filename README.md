@@ -35,6 +35,8 @@ http://localhost:5555
 ## Configure
 Create file `config.yml` in the root of the project and configure as described below.
 
+You can find an example [here](example-config.yml)
+
 ### Team message
 (This does not require configuration)
 

@@ -1,0 +1,45 @@
+
+default:
+  gocd:
+    url: https://my-gocd-host:8154
+    user: horst
+    password: horst-password
+  environments:
+    test:
+      -
+        id: 'backend'
+        url: 'https://my-test-env-host/health'
+        pattern: 'buildVersion":"([0-9a-zA-Z]{1,})"'
+      -
+        id: 'client'
+        url: 'http://my-test-env-host/build.js'
+        pattern: 'buildVersion = "([0-9a-zA-Z]{1,})";'
+    qa:
+      -
+        id: 'backend'
+        url: 'https://my-qa-env-host/health'
+        pattern: 'buildVersion":"([0-9a-zA-Z]{1,})"'
+      -
+        id: 'client'
+        url: 'http://my-qa-env-host/build.js'
+        pattern: 'buildVersion = "([0-9a-zA-Z]{1,})";'
+  logs:
+    queries:
+      -
+        id: 'errors'
+        description: 'Errors'
+        query: 'level:ERROR'
+        type: 'ERROR'
+      -
+        id: 'warning'
+        description: 'Warn 12hrs'
+        query: 'level:WARNING'
+        type: 'INFO'
+        timeSpan: 'now-12h'
+    environments:
+      -
+        id: 'test'
+        url: 'http://my-elasticsearch-test-host/_search'
+      -
+        id: 'qa'
+        url: 'http://my-elasticsearch-qa-host/_search'

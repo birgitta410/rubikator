@@ -125,16 +125,11 @@ default:
         type: 'INFO'
 
 ```
-By default, the count will always be based on the last one hour. You can overwrite that default with attribute `timeSpan`, filled with a time value that ElasticSearch will understand in a "gte" query.
+By default, the count will always be based on the last one hour. You can overwrite that default with attribute `timeSpan`, filled with a time value that ElasticSearch will understand in a "gte" query (e.g. 'now-12h').
 
-```
--
-  id: '12h-imports'
-  description: 'Imports'
-  query: 'message:"successful import" AND ...'
-  type: 'INFO'
-  timeSpan: 'now-12h'
-```
+If you need specific additions to your queries based on the environment, specify an additional `query` value for the environment as well.
+
+See [example config file](example-config) for examples.
 
 ### Run with SSL
 You can run the server with SSL support. The server will look for these two files and use them if they exist:

@@ -39,7 +39,9 @@ default:
     environments:
       -
         id: 'test'
-        url: 'http://my-elasticsearch-test-host/_search'
+        url: 'http://my-elasticsearch-host/_search'
+        query: ' AND environment:"test"'
       -
         id: 'qa'
-        url: 'http://my-elasticsearch-qa-host/_search'
+        url: 'http://my-elasticsearch-host/_search'
+        query: ' AND environment:"qa"'

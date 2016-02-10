@@ -10,7 +10,7 @@ function elkReader() {
 
   var logsConfig = configReader.create('logs').get();
 
-  function countLogs(queryConfig, url) {
+  function countLogs(queryConfig, url, queryAddendum) {
     logger.debug("Sending query", JSON.stringify(queryConfig), "to", url);
     var identifier = queryConfig.id;
 
@@ -21,7 +21,7 @@ function elkReader() {
       body: JSON.stringify({
         "query": {
           "query_string": {
-            "query": queryConfig.query,
+            "query": queryConfig.query + (queryAddendum ? ' ' + queryAddendum : ''),
             "analyze_wildcard": true
           }
         },
@@ -65,11 +65,11 @@ function elkReader() {
     return Q.all(_.map(logsConfig.environments, function(environment) {
       var url = environment.url;
 
-      var queries = _.map(logsConfig.queries, function(query) {
-        return countLogs(query, url);
+      var queryPromises = _.map(logsConfig.queries, function(queryConfig) {
+        return countLogs(queryConfig, url, environment.query);
       });
 
-      return Q.all(queries).then(function(metricsForEnvironment) {
+      return Q.all(queryPromises).then(function(metricsForEnvironment) {
         var result = {};
         _.each(metricsForEnvironment, function(metric) {
           result = _.extend(result, metric);
@@ -82,10 +82,8 @@ function elkReader() {
       });
     })).then(function(envMetrics) {
       var resultForAllEnvironments = {};
-      _.each(envMetrics, function(envMetric) {
-        if(envMetric !== undefined) {
-          resultForAllEnvironments = _.extend(resultForAllEnvironments, envMetric);
-        }
+      _.each(_.compact(envMetrics), function(envMetric) {
+        resultForAllEnvironments = _.extend(resultForAllEnvironments, envMetric);
       });
       return resultForAllEnvironments;
     }).fail(function(error) {

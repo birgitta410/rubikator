@@ -129,7 +129,7 @@ By default, the count will always be based on the last one hour. You can overwri
 
 If you need specific additions to your queries based on the environment, specify an additional `query` value for the environment as well.
 
-See [example config file](example-config) for examples.
+See [example config file](example-config.yml) for examples.
 
 ### Run with SSL
 You can run the server with SSL support. The server will look for these two files and use them if they exist:

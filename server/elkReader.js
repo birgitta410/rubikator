@@ -28,7 +28,7 @@ function elkReader() {
         "filter": {
           "range" : {
             "@timestamp" : {
-              "gte" : "now-1h",
+              "gte" : queryConfig.timeSpan ? queryConfig.timeSpan : "now-1h",
               "lt" :  "now"
             }
           }

@@ -69,7 +69,7 @@ For the security of your build server, please use Go.CD's SSL endpoint and a Go.
 [This Go.CD documentation page](https://www.go.cd/documentation/user/current/configuration/dev_authorization.html) describes how to restrict a user's rights.
 
 ### Environment health checks
-For each environment you want to monitor you can set multiple health checks. For each check, provide an identifier, a url, and a pattern to parse for a specific piece of information in that endpoint (e.g. the deployed build number).
+For each environment you want to monitor you can set multiple health checks. For each check, provide an identifier, a url, and a pattern to parse for a specific piece of information in that endpoint (e.g. the deployed build number). Be sure to put one grouping `()` into the regex, that value will be displayed on the monitor.
 
 ```
 default:

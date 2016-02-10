@@ -5,13 +5,15 @@ Information radiator for software build and environment status.
 
 Currently supports displaying information from:
 
-- [Go CD](http://go.cd)
+- [Go CD](http://go.cd) (featuring random animated gifs for success/failure/building)
 - Kibana
 - Health checks for a configurable set of environments
 
 Tested in Chrome.
 
-![Sample](docs/screenshot.png?raw=true)
+![Sample 1](docs/screenshot.jpg?raw=true)
+
+![Sample 2](docs/screenshot2.jpg?raw=true)
 
 ## SETUP PROJECT
 ```

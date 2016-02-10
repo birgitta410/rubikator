@@ -100,12 +100,15 @@ function onConnectionLost() {
 }
 
 var messenger = MessengerVisualiser(rubikVis);
-var environments = EnvironmentsVisualiser(rubikVis);
-var elk = ElkVisualiser(rubikVis);
-var gocd = GocdVisualiser(rubikVis);
-
 new DataSource('messenger', messenger.processNewData, onConnectionLost, onDataError);
+
+var environments = EnvironmentsVisualiser(rubikVis);
 new DataSource('environments', environments.processNewData, onConnectionLost, onDataError);
+
+var elk = ElkVisualiser(rubikVis);
 new DataSource('logs', elk.processNewData, onConnectionLost, onDataError);
+
+var gocd = GocdVisualiser(rubikVis);
 new DataSource('gocd', gocd.processNewData, onConnectionLost, onDataError);
+
 

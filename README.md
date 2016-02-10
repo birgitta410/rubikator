@@ -141,3 +141,12 @@ Here is one resource to help you get started with a self-signed certificate:
 [https://nodejs.org/api/tls.html#tls_tls_ssl](https://nodejs.org/api/tls.html#tls_tls_ssl)
 
 ...and then check it out at `https://localhost:5555`.
+
+## Build a new data source
+
+You need to steps for this:
+
+- Create a data source in the `server` directory, to regularly send data over websockets to the clients
+- Create a visualisation in the `app` directory that can receive the data and update the visualisation
+
+[server/sampleReader.js](server/sampleReader.js) and [app/sampleVisualiser.js](app/sampleVisualiser.js) show a minimum example how to do this.

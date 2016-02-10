@@ -9,11 +9,7 @@ var goCdApi = require('gocd-api');
 var gocdReaderModule = (function() {
 
   var gocd;
-
-  goCdApi.getInstance(configReader.create('gocd').get()).then(function(instance) {
-    console.log("GO CD DATA CACHE INITIALISED");
-    gocd = instance;
-  }).done();
+  var INIT_STARTED = false;
 
   function compareNumbers(a, b) {
     // JS does lexicographical sorting by default, need to sort by number
@@ -39,6 +35,15 @@ var gocdReaderModule = (function() {
   function getGocdData() {
     if(gocd === undefined) {
       console.log("not ready yet");
+
+      if(! INIT_STARTED) {
+        goCdApi.getInstance(configReader.create('gocd').get()).then(function(instance) {
+          console.log("GO CD DATA CACHE INITIALISED");
+          gocd = instance;
+        }).done();
+        INIT_STARTED = true;
+      }
+
       return Q.resolve([]);
     }
 

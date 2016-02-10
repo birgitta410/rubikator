@@ -6,6 +6,10 @@ var GocdVisualiser = function(rubikVisualiser) {
 
   function processNewDataGocd(data) {
     console.log("data", data);
+    if(data.warning) {
+      return;
+    }
+
     if(_.isEmpty(data)) {
       return;
     }

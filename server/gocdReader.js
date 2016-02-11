@@ -18,9 +18,9 @@ var gocdReaderModule = (function() {
 
   var readHistoryAndActivity = function(data) {
     console.log("reading history", data.pipeline);
-    var activities = mapActivityDataToFigures(data.activity);
+    var activities = mapActivityData(data.activity);
 
-    var history = mapPipelineDataToFigures(data.history);
+    var history = mapPipelineData(data.history);
     var currentGiphys = giphyReader.getCache();
     return Q.resolve({
       activity: activities,
@@ -68,15 +68,17 @@ var gocdReaderModule = (function() {
   }
 
 
-  function mapPipelineDataToFigures(history) {
+  function mapPipelineData(history) {
 
-    var keysDescending = _.keys(history).sort(compareNumbers).reverse();
-    var latestRun = keysDescending.length > 0 ? history[keysDescending[0]] : undefined;
+    var pipelineRuns = history.pipelineRuns ? history.pipelineRuns : history; // gocd-api interface change
+
+    var keysDescending = _.keys(pipelineRuns).sort(compareNumbers).reverse();
+    var latestRun = keysDescending.length > 0 ? pipelineRuns[keysDescending[0]] : undefined;
 
     var ignoreLatestRun = latestRun && (latestRun.wasSuccessful() || latestRun.summary.result === 'unknown');
     if (! ignoreLatestRun) {
       return {
-        boxes: [history[keysDescending[0]]]
+        boxes: [pipelineRuns[keysDescending[0]]]
       };
     } else {
       return {
@@ -86,7 +88,7 @@ var gocdReaderModule = (function() {
 
   }
 
-  function mapActivityDataToFigures(activity) {
+  function mapActivityData(activity) {
 
     return _.where(activity.stages, function(entry) {
       return entry.isBuilding && entry.isBuilding() || entry.activity === 'Building' || entry.isScheduled && entry.isScheduled();

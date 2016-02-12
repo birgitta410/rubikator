@@ -10,7 +10,10 @@ function elkReader() {
 
   var logsConfig = configReader.create('logs').get();
 
-  function countLogs(queryConfig, url, queryAddendum) {
+  function countLogs(queryConfig, url, environment) {
+    var queryAddendum = environment.query;
+    var environmentTarget = environment.targets ? environment.targets[queryConfig.id] : undefined;
+
     logger.debug("Sending query", JSON.stringify(queryConfig), "to", url);
     var identifier = queryConfig.id;
 
@@ -47,7 +50,8 @@ function elkReader() {
         metric[identifier] = {
           hits: result.hits ? result.hits.total || 0 : '?',
           description: queryConfig.description,
-          type: queryConfig.type
+          type: queryConfig.type,
+          target: environmentTarget
         };
         if(result.hits === undefined) {
           console.log("WARNING", "No hits for", requestOptions.url, queryConfig.query);
@@ -66,7 +70,7 @@ function elkReader() {
       var url = environment.url;
 
       var queryPromises = _.map(logsConfig.queries, function(queryConfig) {
-        return countLogs(queryConfig, url, environment.query);
+        return countLogs(queryConfig, url, environment);
       });
 
       return Q.all(queryPromises).then(function(metricsForEnvironment) {

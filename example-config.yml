@@ -31,9 +31,9 @@ default:
         query: 'level:ERROR'
         type: 'ERROR'
       -
-        id: 'warning'
-        description: 'Warn 12hrs'
-        query: 'level:WARNING'
+        id: 'jobruns'
+        description: 'JobRuns 12hrs'
+        query: 'logger:JobLogger'
         type: 'INFO'
         timeSpan: 'now-12h'
     environments:
@@ -45,3 +45,5 @@ default:
         id: 'qa'
         url: 'http://my-elasticsearch-host/_search'
         query: ' AND environment:"qa"'
+        targets:
+          jobruns: 100

@@ -40,6 +40,19 @@ function elkReader() {
       url: url
     };
 
+    function targetIsMet(environmentTarget, totalHits) {
+      if(environmentTarget === undefined) {
+        return undefined;
+      }
+
+      var range = (environmentTarget + "").split("-");
+      if(range.length === 1) {
+        return totalHits === Number(range[0]);
+      } else if (range.length === 2) {
+        return totalHits >= Number(range[0]) && totalHits <= Number(range[1]);
+      }
+    }
+
     request(requestOptions, function (error, response, body) {
       if(error) {
         console.log("ERROR", 'failed to get ' + requestOptions.url, error);
@@ -47,11 +60,15 @@ function elkReader() {
       } else {
         var result = JSON.parse(body);
         var metric = {};
+
+        var totalHits = result.hits ? result.hits.total || 0 : '?';
+
         metric[identifier] = {
-          hits: result.hits ? result.hits.total || 0 : '?',
+          hits: totalHits,
           description: queryConfig.description,
           type: queryConfig.type,
-          target: environmentTarget
+          target: environmentTarget,
+          targetIsMet: targetIsMet(environmentTarget, totalHits)
         };
         if(result.hits === undefined) {
           console.log("WARNING", "No hits for", requestOptions.url, queryConfig.query);

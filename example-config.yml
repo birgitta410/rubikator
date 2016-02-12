@@ -46,4 +46,4 @@ default:
         url: 'http://my-elasticsearch-host/_search'
         query: ' AND environment:"qa"'
         targets:
-          jobruns: 100
+          jobruns: 5-100

@@ -48,7 +48,7 @@ var ElkVisualiser = function(rubikVisualiser) {
         var colorConverter = result.type === 'ERROR' ? errorColor : infoColor;
 
         outerBox.addClass(colorConverter(result.hits, result.target));
-        $('<div>' + result.description + '</br><span class="metric">' + result.hits + '</span></div>').appendTo(outerBox);
+        $('<div><span class="metric-description">' + result.description + '</span></br><span class="metric">' + result.hits + '</span></div>').appendTo(outerBox);
       }
 
       rubikVisualiser.createRowsOfBoxesForEnvironment(elkDiv, data, environmentId, appendMetrics, 4);

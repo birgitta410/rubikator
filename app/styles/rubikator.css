@@ -156,9 +156,12 @@ div {
 .content .metric {
     font-size: 1.8rem;
 }
+.content .metric-description {
+    font-size: 0.7rem;
+}
 
 .content .detail {
-    font-size: 1vw;
+    font-size: 0.7rem;
 }
 
 .content .heading {

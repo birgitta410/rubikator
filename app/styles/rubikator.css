@@ -150,7 +150,7 @@ div {
 
 .content > div {
     margin: 0;
-    padding: 0.8vw 1vw 1vw 1vw;
+    padding: 0.7vw 1vw 1vw 1vw;
 }
 
 .content .metric {
@@ -260,7 +260,7 @@ div {
 }
 .dark-green {
     background-color: #25a43d;
-    color: #ccc;
+    color: #000;
 }
 .red {
     background-color: #fe2425;

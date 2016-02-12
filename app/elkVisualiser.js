@@ -30,6 +30,8 @@ var ElkVisualiser = function(rubikVisualiser) {
     function infoColor(numHits, target) {
       if(numHits === target) {
         return 'dark-green';
+      } else if(target !== undefined && numHits !== target) {
+        return 'yellow';
       } else if (numHits >= 30) {
         return 'blue';
       } else if (numHits >= 50) {

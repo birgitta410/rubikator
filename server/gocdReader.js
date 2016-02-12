@@ -16,6 +16,41 @@ var gocdReaderModule = (function() {
     return a - b;
   }
 
+
+
+  function mapPipelineData(history) {
+
+    var pipelineRuns = history.pipelineRuns ? history.pipelineRuns : history; // gocd-api interface change
+
+    var keysDescending = _.keys(pipelineRuns).sort(compareNumbers).reverse();
+    var latestRun = keysDescending.length > 0 ? pipelineRuns[keysDescending[0]] : undefined;
+
+    var ignoreLatestRun = latestRun && (latestRun.wasSuccessful() || latestRun.summary.result === 'unknown');
+    if (! ignoreLatestRun) {
+      console.log("returning", history.pipelineName, history.statistics);
+      return {
+        boxes: [pipelineRuns[keysDescending[0]]],
+        pipelineName: history.pipelineName,
+        statistics: history.statistics
+      };
+    } else {
+      return {
+        boxes: [],
+        pipelineName: history.pipelineName,
+        statistics: history.statistics
+      };
+    }
+
+  }
+
+  function mapActivityData(activity) {
+
+    return _.where(activity.stages, function(entry) {
+      return entry.isBuilding && entry.isBuilding() || entry.activity === 'Building' || entry.isScheduled && entry.isScheduled();
+    });
+
+  }
+
   var readHistoryAndActivity = function(data) {
     console.log("reading history", data.pipeline);
     var activities = mapActivityData(data.activity);
@@ -67,34 +102,6 @@ var gocdReaderModule = (function() {
     });
   }
 
-
-  function mapPipelineData(history) {
-
-    var pipelineRuns = history.pipelineRuns ? history.pipelineRuns : history; // gocd-api interface change
-
-    var keysDescending = _.keys(pipelineRuns).sort(compareNumbers).reverse();
-    var latestRun = keysDescending.length > 0 ? pipelineRuns[keysDescending[0]] : undefined;
-
-    var ignoreLatestRun = latestRun && (latestRun.wasSuccessful() || latestRun.summary.result === 'unknown');
-    if (! ignoreLatestRun) {
-      return {
-        boxes: [pipelineRuns[keysDescending[0]]]
-      };
-    } else {
-      return {
-        boxes: []
-      };
-    }
-
-  }
-
-  function mapActivityData(activity) {
-
-    return _.where(activity.stages, function(entry) {
-      return entry.isBuilding && entry.isBuilding() || entry.activity === 'Building' || entry.isScheduled && entry.isScheduled();
-    });
-
-  }
 
 
   return {

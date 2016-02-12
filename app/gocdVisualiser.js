@@ -68,7 +68,9 @@ var GocdVisualiser = function(rubikVisualiser) {
           '<img src="' + data[0].fail +'"/>' +
           '</br>' +
           history.summary.result +
-          '</br><span class="detail">' + history.summary.text.substr(0, 65) + (history.summary.text.length > 65 ? '...' : '') + '</span>';
+          '</br><span class="detail">Last success: ' +
+          pipelineState.history.statistics.timeSinceLastSuccess.human +
+          '</span></br><span class="detail">' + history.summary.text.substr(0, 65) + (history.summary.text.length > 65 ? '...' : '') + '</span>';
 
         $('<div>' + boxText + '</div>').appendTo(newColumn);
 

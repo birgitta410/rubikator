@@ -180,6 +180,7 @@ div {
 
 .message {
     margin: 1vw 1vw 1vw 0;
+    padding: 1vw;
     align-items: center;
 }
 

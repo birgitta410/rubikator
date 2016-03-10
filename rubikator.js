@@ -18,7 +18,7 @@ function dashboardServer() {
 
   var CHECK_FOR_CONFIG_FIRST = true;
 
-  var UPDATE_INTERVAL = 10000;
+  var UPDATE_INTERVAL = 20000;
   var USES_SSL = false;
   var port = process.env.PORT || 5555;
 

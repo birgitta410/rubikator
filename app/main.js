@@ -91,8 +91,11 @@ var RubikVisualisation = function() {
 var rubikVis = new RubikVisualisation();
 
 function onDataError(error) {
-  $('#error-message').text(error);
+  $('#error-message').text("Rubikator error | " + error);
   $('#error-message').show();
+  setTimeout(function () {
+    $('#error-message').fadeOut();
+  }, 30 * 1000);
 }
 
 function onConnectionLost() {

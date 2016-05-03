@@ -31,7 +31,7 @@ var ElkVisualiser = function(rubikVisualiser) {
       if(targetIsMet === true) {
         return 'dark-green';
       } else if(targetIsMet === false) {
-        return 'yellow';
+        return 'orange';
       } else if (numHits >= 30) {
         return 'blue';
       } else if (numHits >= 50) {

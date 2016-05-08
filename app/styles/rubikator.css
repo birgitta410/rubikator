@@ -18,18 +18,12 @@ html {
     html {
         font-size: 1.8vw;
     }
-
 }
-
 
 @media (max-width: 5000px) {
     html {
         font-size: 1.8vw;
     }
-    .content img {
-        height: 15vw;
-    }
-
 }
 
 
@@ -170,12 +164,19 @@ div {
 }
 
 .content img {
+    margin: 1vw auto 1vw auto;
+}
+
+.content img.float {
     clear: right;
     float: left;
-    margin: 1vw 1vw 0 0;
-    /*max-height: 12vw;*/
-    /*max-height: 70%;*/
-    /*max-width: 70%;*/
+}
+.content img.center {
+    display: block;
+}
+
+.content span {
+    margin-left: 1vw;
 }
 
 .message {

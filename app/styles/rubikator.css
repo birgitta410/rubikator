@@ -16,13 +16,13 @@ html {
 
 @media (max-width: 3000px) {
     html {
-        font-size: 1.8vw;
+        font-size: 1.5vw;
     }
 }
 
 @media (max-width: 5000px) {
     html {
-        font-size: 1.8vw;
+        font-size: 1.5vw;
     }
 }
 

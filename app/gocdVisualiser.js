@@ -108,6 +108,7 @@ var GocdVisualiser = function(rubikVisualiser) {
         var parentMarginTop = parseInt(parentBox.css("margin-top")) || 0;
 
         var parentHeight = parentBox.height() - parentMarginTop;
+        var parentWidth = parentBox.width();
         var parentRatio = parentBox.width()/parentBox.height();
         var isVertical = parentRatio <= 3;
         var heightAdjustmentFactor = isVertical ? VERTICAL_ADJUSTMENT : HORIZONTAL_ADJUSTMENT;
@@ -124,7 +125,14 @@ var GocdVisualiser = function(rubikVisualiser) {
           $(this).addClass("float");
         }
 
-        $(this).attr("height", newHeight + 'px');
+        var newWidth = newHeight * parentRatio;
+        if(newWidth > parentWidth) {
+          //newWidth = parentWidth;
+          $(this).attr("width", parentWidth + 'px');
+        } else {
+          $(this).attr("height", newHeight + 'px');
+        }
+
       });
     }
 
@@ -132,7 +140,7 @@ var GocdVisualiser = function(rubikVisualiser) {
     window.onresize = resizeGifs;
 
   }
-  
+
   return {
     processNewData: processNewDataGocd
   };

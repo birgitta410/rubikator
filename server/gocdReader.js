@@ -10,96 +10,101 @@ var gocdReaderModule = (function() {
 
   var gocd;
   var INIT_STARTED = false;
+  var config = configReader.create('gocd').get();
 
   function compareNumbers(a, b) {
     // JS does lexicographical sorting by default, need to sort by number
     return a - b;
   }
 
-
-
-  function mapPipelineData(history) {
+  function mapRelevantPipelineData(history) {
 
     var pipelineRuns = history.pipelineRuns ? history.pipelineRuns : history; // gocd-api interface change
 
     var keysDescending = _.keys(pipelineRuns).sort(compareNumbers).reverse();
     var latestRun = keysDescending.length > 0 ? pipelineRuns[keysDescending[0]] : undefined;
 
-    var ignoreLatestRun = latestRun && (latestRun.wasSuccessful() || latestRun.summary.result === 'unknown');
-    if (! ignoreLatestRun) {
+    var irrelevantForDisplay = latestRun && (latestRun.wasSuccessful() || latestRun.summary.result === 'unknown');
+    if (irrelevantForDisplay) {
+      return {
+        boxes: [],
+        pipelineName: history.pipelineName,
+        statistics: history.statistics
+      };
+    } else {
       console.log("returning", history.pipelineName, history.statistics);
       return {
         boxes: [pipelineRuns[keysDescending[0]]],
         pipelineName: history.pipelineName,
         statistics: history.statistics
       };
-    } else {
-      return {
-        boxes: [],
-        pipelineName: history.pipelineName,
-        statistics: history.statistics
-      };
     }
 
   }
 
-  function mapActivityData(activity) {
+  function mapRelevantActivityData(activity) {
 
     return _.where(activity.stages, function(entry) {
-      return entry.isBuilding && entry.isBuilding() || entry.activity === 'Building' || entry.isScheduled && entry.isScheduled();
+      var relevantForDisplay =
+        entry.isBuilding && entry.isBuilding()
+          || entry.activity === 'Building'
+          || entry.isScheduled && entry.isScheduled();
+      return relevantForDisplay;
     });
 
   }
 
   var readHistoryAndActivity = function(data) {
     console.log("reading history", data.pipeline);
-    var activities = mapActivityData(data.activity);
+    var activities = mapRelevantActivityData(data.activity);
 
-    var history = mapPipelineData(data.history);
+    var history = mapRelevantPipelineData(data.history);
     var currentGiphys = giphyReader.getCache();
-    return Q.resolve({
+    return {
       activity: activities,
       history: history,
       pipeline: data.pipeline,
       success: currentGiphys['success'],
       fail: currentGiphys['fail'],
       working: currentGiphys['working']
-    });
+    };
   };
 
-  function getGocdData() {
-    if(gocd === undefined) {
-      console.log("not ready yet");
-
-      if(! INIT_STARTED) {
-        goCdApi.getInstance(configReader.create('gocd').get()).then(function(instance) {
-          console.log("GO CD DATA CACHE INITIALISED");
-          gocd = instance;
-        }).done();
-        INIT_STARTED = true;
-      }
-
-      return Q.resolve([]);
-    }
-
+  function getCurrentData() {
     console.log("Starting to read Go CD data for ", gocd.pipelineNames);
-    var pipelines = gocd.pipelineNames;
-    var all = _.map(pipelines, function(pipeline) {
-      return gocd.readData(pipeline);
-    });
+    var dataPromiseForEachPipeline = _.map(gocd.pipelineNames, gocd.readData);
 
-    return Q.all(all).then(function (gocdData) {
-
-      var transforms = _.map(gocdData, readHistoryAndActivity);
-      return Q.all(transforms).then(function(transformedData) {
-        console.log("sending to /gocd");
-        return transformedData;
-      });
-
+    return Q.all(dataPromiseForEachPipeline).then(function (gocdData) {
+      console.log("sending to /gocd");
+      return _.map(gocdData, readHistoryAndActivity);
     }).fail(function(error) {
       console.log("COULD NOT READ DATA!", error);
       return {error: error};
     });
+  }
+
+  function initAndGetFirstData() {
+    console.log("GO CD not ready yet");
+
+    if(INIT_STARTED) {
+      return Q.resolve([]);
+    }
+
+    INIT_STARTED = true;
+    return goCdApi.getInstance(config).then(function(instance) {
+      console.log("GO CD DATA CACHE INITIALISED");
+      gocd = instance;
+      return getCurrentData();
+    });
+
+  }
+
+  function getGocdData() {
+    if(gocd === undefined) {
+      return initAndGetFirstData();
+    }
+    return getCurrentData();
+
   }
 
 

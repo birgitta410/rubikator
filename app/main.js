@@ -112,6 +112,11 @@ var elk = ElkVisualiser(rubikVis);
 new DataSource('logs', elk.processNewData, onConnectionLost, onDataError);
 
 var gocd = GocdVisualiser(rubikVis);
-new DataSource('gocd', gocd.processNewData, onConnectionLost, onDataError);
+var gocdFocus = GocdFocusVisualiser(rubikVis);
+function processGocd(data) {
+  gocd.processNewData(data);
+  gocdFocus.processNewData(data);
+}
+new DataSource('gocd', processGocd, onConnectionLost, onDataError);
 
 

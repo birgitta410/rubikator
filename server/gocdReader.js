@@ -17,9 +17,9 @@ var gocdReaderModule = (function() {
     return a - b;
   }
 
-  function mapRelevantPipelineData(history) {
+  function mapRelevantHistoryData(pipelineHistory) {
 
-    var pipelineRuns = history.pipelineRuns ? history.pipelineRuns : history; // gocd-api interface change
+    var pipelineRuns = pipelineHistory.pipelineRuns ? pipelineHistory.pipelineRuns : pipelineHistory; // gocd-api interface change
 
     var keysDescending = _.keys(pipelineRuns).sort(compareNumbers).reverse();
     var latestRun = keysDescending.length > 0 ? pipelineRuns[keysDescending[0]] : undefined;
@@ -28,19 +28,31 @@ var gocdReaderModule = (function() {
     if (irrelevantForDisplay) {
       return {
         boxes: [],
-        pipelineName: history.pipelineName,
-        statistics: history.statistics
+        pipelineName: pipelineHistory.pipelineName,
+        statistics: pipelineHistory.statistics
       };
     } else {
-      console.log("returning", history.pipelineName, history.statistics);
+      console.log("returning", pipelineHistory.pipelineName, pipelineHistory.statistics);
       return {
         boxes: [pipelineRuns[keysDescending[0]]],
-        pipelineName: history.pipelineName,
-        statistics: history.statistics
+        pipelineName: pipelineHistory.pipelineName,
+        statistics: pipelineHistory.statistics
       };
     }
 
   }
+
+  var readFocusHistory = function(pipelineHistory) {
+    var pipelineRuns = pipelineHistory.pipelineRuns ? pipelineHistory.pipelineRuns : pipelineHistory; // gocd-api interface change
+    var focusStage = config.focus.split("::")[1];
+
+    var keysDescending = _.keys(pipelineRuns).sort(compareNumbers).reverse();
+    var stageRuns = _.map(keysDescending, function(runLabel) {
+      var run = pipelineRuns[runLabel];
+      return _.extend(_.find(run.stages, { name: focusStage }), {label: runLabel});
+    });
+    return stageRuns;
+  };
 
   function mapRelevantActivityData(activity) {
 
@@ -54,29 +66,45 @@ var gocdReaderModule = (function() {
 
   }
 
-  var readHistoryAndActivity = function(data) {
-    console.log("reading history", data.pipeline);
-    var activities = mapRelevantActivityData(data.activity);
+  var readRelevantHistoryAndActivity = function(pipelineData) {
+    console.log("reading history", pipelineData.pipeline);
+    var activities = mapRelevantActivityData(pipelineData.activity);
 
-    var history = mapRelevantPipelineData(data.history);
+    var history = mapRelevantHistoryData(pipelineData.history);
+    var historyFocus = {};
+    historyFocus[config.focus] = ["hello"];
+
     var currentGiphys = giphyReader.getCache();
     return {
       activity: activities,
       history: history,
-      pipeline: data.pipeline,
+      pipeline: pipelineData.pipeline,
       success: currentGiphys['success'],
       fail: currentGiphys['fail'],
       working: currentGiphys['working']
     };
   };
 
+  function isFocused(pipelineData) {
+    return config.focus && config.focus.indexOf(pipelineData.pipeline) === 0;
+  }
+
   function getCurrentData() {
     console.log("Starting to read Go CD data for ", gocd.pipelineNames);
     var dataPromiseForEachPipeline = _.map(gocd.pipelineNames, gocd.readData);
 
-    return Q.all(dataPromiseForEachPipeline).then(function (gocdData) {
+    return Q.all(dataPromiseForEachPipeline).then(function (pipelineData) {
       console.log("sending to /gocd");
-      return _.map(gocdData, readHistoryAndActivity);
+      var relevantHistoryAndActivity = _.map(pipelineData, readRelevantHistoryAndActivity);
+
+      var focusedPipelineName = config.focus ? config.focus.split("::")[0] : "NO_FOCUS";
+      var focusedPipeline = _.find(pipelineData, { pipeline: focusedPipelineName});
+      var focusHistory = focusedPipeline ? readFocusHistory(focusedPipeline.history) : undefined;
+
+      return {
+        historyAndActivity: relevantHistoryAndActivity,
+        focus: focusHistory
+      };
     }).fail(function(error) {
       console.log("COULD NOT READ DATA!", error);
       return {error: error};

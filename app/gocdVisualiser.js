@@ -4,15 +4,18 @@ var GocdVisualiser = function(rubikVisualiser) {
   var gocdDiv = rubikVisualiser.createNewColumn();
   gocdDiv.hide();
 
-  function processNewDataGocd(data) {
-    console.log("data", data);
-    if(data.warning) {
+  function processNewDataGocd(gocdData) {
+    console.log("data", gocdData);
+
+    if(gocdData === undefined || gocdData.warning) {
       return;
     }
 
+    var data = gocdData.historyAndActivity;
     if(_.isEmpty(data)) {
       return;
     }
+
 
     gocdDiv.show();
     gocdDiv.empty();

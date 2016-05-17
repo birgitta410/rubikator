@@ -59,11 +59,16 @@ var gocdReaderModule = (function() {
     var focusedPipeline = _.find(pipelineData, { pipeline: focusedPipelineName});
     var focusHistory = focusedPipeline ? readFocusHistory(focusedPipeline.history) : undefined;
     var maxFocus = 20;
+    if(focusHistory === undefined) {
+      return undefined;
+    }
+
     var toDrop = focusHistory.length - maxFocus;
     if(toDrop < 0) {
       toDrop = 0;
     }
     return _.dropRight(focusHistory, toDrop);
+
   }
 
   function mapRelevantActivityData(activity) {

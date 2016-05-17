@@ -58,7 +58,7 @@ var gocdReaderModule = (function() {
     var focusedPipelineName = config.focus ? config.focus.split("::")[0] : "NO_FOCUS";
     var focusedPipeline = _.find(pipelineData, { pipeline: focusedPipelineName});
     var focusHistory = focusedPipeline ? readFocusHistory(focusedPipeline.history) : undefined;
-    var maxFocus = 20;
+    var maxFocus = 15;
     if(focusHistory === undefined) {
       return undefined;
     }

@@ -54,9 +54,21 @@ var gocdReaderModule = (function() {
     return stageRuns;
   };
 
+  var mapFocusHistory = function(pipelineData) {
+    var focusedPipelineName = config.focus ? config.focus.split("::")[0] : "NO_FOCUS";
+    var focusedPipeline = _.find(pipelineData, { pipeline: focusedPipelineName});
+    var focusHistory = focusedPipeline ? readFocusHistory(focusedPipeline.history) : undefined;
+    var maxFocus = 20;
+    var toDrop = focusHistory.length - maxFocus;
+    if(toDrop < 0) {
+      toDrop = 0;
+    }
+    return _.dropRight(focusHistory, toDrop);
+  }
+
   function mapRelevantActivityData(activity) {
 
-    return _.where(activity.stages, function(entry) {
+    return _.filter(activity.stages, function(entry) {
       var relevantForDisplay =
         entry.isBuilding && entry.isBuilding()
           || entry.activity === 'Building'
@@ -85,10 +97,6 @@ var gocdReaderModule = (function() {
     };
   };
 
-  function isFocused(pipelineData) {
-    return config.focus && config.focus.indexOf(pipelineData.pipeline) === 0;
-  }
-
   function getCurrentData() {
     console.log("Starting to read Go CD data for ", gocd.pipelineNames);
     var dataPromiseForEachPipeline = _.map(gocd.pipelineNames, gocd.readData);
@@ -97,9 +105,7 @@ var gocdReaderModule = (function() {
       console.log("sending to /gocd");
       var relevantHistoryAndActivity = _.map(pipelineData, readRelevantHistoryAndActivity);
 
-      var focusedPipelineName = config.focus ? config.focus.split("::")[0] : "NO_FOCUS";
-      var focusedPipeline = _.find(pipelineData, { pipeline: focusedPipelineName});
-      var focusHistory = focusedPipeline ? readFocusHistory(focusedPipeline.history) : undefined;
+      var focusHistory = mapFocusHistory(pipelineData);
 
       return {
         historyAndActivity: relevantHistoryAndActivity,

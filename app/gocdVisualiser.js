@@ -130,7 +130,7 @@ var GocdVisualiser = function(rubikVisualiser) {
 
         var newWidth = newHeight * parentRatio;
         if(newWidth > parentWidth) {
-          //newWidth = parentWidth;
+          console.log("Calculated width is too wide!", newWidth, parentWidth);
           $(this).attr("width", parentWidth + 'px');
         } else {
           $(this).attr("height", newHeight + 'px');

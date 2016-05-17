@@ -17,7 +17,6 @@ var GocdFocusVisualiser = function(rubikVisualiser) {
       return;
     }
 
-
     gocdFocusDiv.show();
     gocdFocusDiv.empty();
 
@@ -31,7 +30,7 @@ var GocdFocusVisualiser = function(rubikVisualiser) {
       var currentRow = $(flexRow).appendTo(outerColumn);
       var newBox = $('<div class="content flex-column detail"></div>').appendTo(currentRow);
 
-      var color = stageData.result === 'Passed' ? 'green' : 'red';
+      var color = stageData.result === 'Passed' ? 'green' : 'orange';
       newBox.addClass(color);
       $('<div>' + stageData.label + '</div>').appendTo(newBox);
 

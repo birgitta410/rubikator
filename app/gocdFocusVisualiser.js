@@ -31,6 +31,9 @@ var GocdFocusVisualiser = function(rubikVisualiser) {
       var newBox = $('<div class="content flex-column detail"></div>').appendTo(currentRow);
 
       var color = stageData.result === 'Passed' ? 'green' : 'orange';
+      if(stageData.result !== 'Passed' && stageData.result !== 'Failed') {
+        color = 'grey';
+      }
       newBox.addClass(color);
       $('<div>' + stageData.label + '</div>').appendTo(newBox);
 

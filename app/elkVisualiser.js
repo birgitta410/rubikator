@@ -27,6 +27,14 @@ var ElkVisualiser = function(rubikVisualiser) {
       }
     }
 
+    function warnColor(numHits) {
+      if(numHits < 10) {
+        return 'grey';
+      } else {
+        return 'yellow';
+      }
+    }
+
     function infoColor(numHits, targetIsMet) {
       if(targetIsMet === true) {
         return 'dark-green';
@@ -48,6 +56,9 @@ var ElkVisualiser = function(rubikVisualiser) {
 
         var result = environmentData[queryId];
         var colorConverter = result.type === 'ERROR' ? errorColor : infoColor;
+        if(result.type === 'WARN') {
+          colorConverter = warnColor;
+        }
 
         outerBox.addClass(colorConverter(result.hits, result.targetIsMet));
         $('<div><span class="metric-description">' + result.description + '</span></br><span class="metric">' + result.hits + '</span></div>').appendTo(outerBox);

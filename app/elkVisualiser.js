@@ -64,7 +64,7 @@ var ElkVisualiser = function(rubikVisualiser) {
         $('<div><span class="metric-description">' + result.description + '</span></br><span class="metric">' + result.hits + '</span></div>').appendTo(outerBox);
       }
 
-      rubikVisualiser.createRowsOfBoxesForEnvironment(elkDiv, data, environmentId, appendMetrics, 4);
+      rubikVisualiser.createRowsOfBoxesForEnvironment(elkDiv, data, environmentId, appendMetrics, 3);
 
     });
 

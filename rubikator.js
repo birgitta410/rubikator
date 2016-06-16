@@ -23,7 +23,7 @@ function dashboardServer() {
   var port = process.env.PORT || 5555;
 
   function createServer() {
-    var rootDir = path.resolve(path.dirname(module.uri));
+    var rootDir = path.resolve(path.dirname(module.uri || "."));
     app.use(express.static(rootDir + '/app/'));
 
     try {

@@ -27,6 +27,11 @@ Start server
 npm start
 ```
 
+You may run this application with Docker instead
+
+    docker build -t rubikator .
+    docker run -it -d -p 5555:5555 --name rubikator rubikator
+
 Local application URL
 ```
 http://localhost:5555

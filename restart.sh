@@ -1,5 +1,5 @@
 #!/bin/bash
 
-kill `pgrep -f "node rubikator"`
+kill `pgrep -f "node server.js"`
 rm rubikator.log
-node rubikator > rubikator.log &
+npm start > rubikator.log &

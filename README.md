@@ -24,7 +24,7 @@ Configure access to your Go CD server (see below)
 
 Start server
 ```
-node rubikator
+npm start
 ```
 
 Local application URL

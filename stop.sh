@@ -1,3 +1,3 @@
 #!/bin/bash
 
-kill `pgrep -f "node rubikator"`
+kill `pgrep -f "node server.js"`

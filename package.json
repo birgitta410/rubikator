@@ -1,6 +1,9 @@
 {
   "name": "sf-dashboard",
   "version": "0.0.2",
+  "scripts": {
+    "test": "jasmine"
+  },
   "dependencies": {
     "express": "^4.12.3",
     "gocd-api": "git://github.com/birgitta410/gocd-api.git#WIP",
@@ -13,5 +16,9 @@
   },
   "engines": {
     "node": "0.10.35"
+  },
+  "devDependencies": {
+    "jasmine": "^2.5.1",
+    "proxyquire": "^1.7.10"
   }
 }

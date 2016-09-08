@@ -12,7 +12,8 @@ describe('elkReader', function () {
     }],
     environments: [{
       id: 'PROD',
-      url: 'http://myprod.org/_search'
+      url: 'http://myprod.org/_search',
+      query: ' AND HOSTNAME:"PROD"'
     }]
   };
 
@@ -33,15 +34,29 @@ describe('elkReader', function () {
     });
   });
 
-  function mockRequest(num, data) {
-    const requestCallback = requestMock.calls.argsFor(num)[1];
-    requestCallback(undefined, {}, data);
+  function mockRequestAndGetOptions(num, data) {
+    const requestArgs = requestMock.calls.argsFor(num);
+    requestArgs[1](undefined, {}, data);
+    return requestArgs[0];
   }
 
-  it('should return activity data', function (done) {
-    var whenElkDataReceived = elkReader.getElkData()
+  it('should create a request based on configuration data', function () {
+    var whenElkDataReceived = elkReader.getElkData();
 
-    mockRequest(0, '{"hits": { "total": 2 } }'); // 1 query x 1 environment
+    const requestOptions = mockRequestAndGetOptions(0, '{"hits": { "total": 2 } }');
+
+    expect(requestOptions).toBeDefined();
+
+    const requestBody = JSON.parse(requestOptions.body);
+    expect(requestBody.query.query_string.query).toBe('level:"ERROR"  AND HOSTNAME:"PROD"');
+    expect(requestBody.filter.range["@timestamp"].gte).toBe('now-2h');
+
+  });
+
+  it('should combine the response data to expected metrics data', function (done) {
+    var whenElkDataReceived = elkReader.getElkData();
+
+    const requestOptions = mockRequestAndGetOptions(0, '{"hits": { "total": 2 } }');
 
     whenElkDataReceived.then(function(result) {
       const envId = mockConfigData.environments[0].id;

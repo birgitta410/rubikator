@@ -16,7 +16,7 @@ function elkReader() {
   }
 
   function countLogs(queryConfig, url, environment) {
-    var queryAddendum = environment.query;
+    var queryAddendum = environment.queryAddition;
     var environmentTarget = environment.targets ? environment.targets[queryConfig.id] : undefined;
 
     logger.debug("Sending query", JSON.stringify(queryConfig), "to", url);
@@ -91,7 +91,11 @@ function elkReader() {
     return Q.all(_.map(logsConfig.environments, function(environment) {
       var url = environment.url;
 
-      var queryPromises = _.map(logsConfig.queries, function(queryConfig) {
+      var queriesForEnvironment = environment.queries ? _.filter(logsConfig.queries, function(query) {
+        return _.includes(environment.queries, query.id);
+      }) : logsConfig.queries;
+
+      var queryPromises = _.map(queriesForEnvironment, function(queryConfig) {
         return countLogs(queryConfig, url, environment);
       });
 

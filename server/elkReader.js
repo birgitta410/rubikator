@@ -5,10 +5,15 @@ var Q = require('q');
 var request = require('request');
 var configReader = require('./ymlHerokuConfig');
 var logger = require('./logger');
+var moment = require('moment');
 
 function elkReader() {
 
   var logsConfig = configReader.create('logs').get();
+
+  function parseUrl(urlPattern) {
+    return urlPattern.replace('${date}', moment().format('YYYY.MM.DD'));
+  }
 
   function countLogs(queryConfig, url, environment) {
     var queryAddendum = environment.query;
@@ -37,7 +42,7 @@ function elkReader() {
           }
         }
       }),
-      url: url
+      url: parseUrl(url)
     };
 
     function targetIsMet(environmentTarget, totalHits) {

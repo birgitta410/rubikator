@@ -14,6 +14,9 @@ describe('elkReader', function () {
       id: 'PROD',
       url: 'http://myprod.org/_search',
       query: ' AND HOSTNAME:"PROD"'
+    }, {
+      id: 'DEV',
+      url: 'http://myprod.org/a-timed-index-${date}/_search'
     }]
   };
 
@@ -41,13 +44,18 @@ describe('elkReader', function () {
   }
 
   it('should create a request based on configuration data', function () {
+    var baseTime = new Date(2015, 0, 1);
+    jasmine.clock().mockDate(baseTime);
+
     var whenElkDataReceived = elkReader.getElkData();
 
-    const requestOptions = mockRequestAndGetOptions(0, '{"hits": { "total": 2 } }');
+    const requestOptionsEnvironment1 = mockRequestAndGetOptions(0, '{"hits": { "total": 2 } }');
+    const requestOptionsEnvironment2 = mockRequestAndGetOptions(1, '{"hits": { "total": 2 } }');
 
-    expect(requestOptions).toBeDefined();
+    expect(requestOptionsEnvironment1.url).toBe('http://myprod.org/_search');
+    expect(requestOptionsEnvironment2.url).toBe('http://myprod.org/a-timed-index-2015.01.01/_search');
 
-    const requestBody = JSON.parse(requestOptions.body);
+    const requestBody = JSON.parse(requestOptionsEnvironment1.body);
     expect(requestBody.query.query_string.query).toBe('level:"ERROR"  AND HOSTNAME:"PROD"');
     expect(requestBody.filter.range["@timestamp"].gte).toBe('now-2h');
 
@@ -57,6 +65,7 @@ describe('elkReader', function () {
     var whenElkDataReceived = elkReader.getElkData();
 
     const requestOptions = mockRequestAndGetOptions(0, '{"hits": { "total": 2 } }');
+    mockRequestAndGetOptions(1, '{"hits": { "total": 2 } }');
 
     whenElkDataReceived.then(function(result) {
       const envId = mockConfigData.environments[0].id;

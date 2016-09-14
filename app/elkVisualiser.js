@@ -15,12 +15,16 @@ var ElkVisualiser = function(rubikVisualiser) {
     elkDiv.empty();
     $('<div class="category horizontal"><div>LOGS</div></div>').appendTo(elkDiv);
 
-    function errorColor(numErrors) {
-      if (numErrors === 0) {
+    function errorColor(numErrors, critical) {
+      if(critical === true) {
+        return 'red throb';
+      } else if(critical === false) {
+        return 'pink';
+      } else if (numErrors === 0) {
         return 'green';
       } else if (numErrors <= 10) {
-        return 'yellow';
-      } else if (numErrors <= 20) {
+        return 'pink';
+      } else if (numErrors <= critical) {
         return 'pink throb'
       } else {
         return 'red throb';
@@ -61,7 +65,8 @@ var ElkVisualiser = function(rubikVisualiser) {
         }
 
         outerBox.addClass(colorConverter(result.hits, result.targetIsMet));
-        $('<div><span class="metric-description">' + result.description + '</span></br><span class="metric">' + result.hits + '</span></div>').appendTo(outerBox);
+        $('<div><span class="metric-description">' + result.description + '</span></br>' +
+          '<span class="metric">' + result.hits + '</span></div>').appendTo(outerBox);
       }
 
       rubikVisualiser.createRowsOfBoxesForEnvironment(elkDiv, data, environmentId, appendMetrics, 3);

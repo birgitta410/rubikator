@@ -49,10 +49,11 @@ function elkReader() {
       if(environmentTarget === undefined) {
         return undefined;
       }
-
       var range = (environmentTarget + "").split("-");
       if(range.length === 1) {
         return totalHits === Number(range[0]);
+      } else if (range.length === 2 && range[1] === "*") {
+        return totalHits >= Number(range[0]);
       } else if (range.length === 2) {
         return totalHits >= Number(range[0]) && totalHits <= Number(range[1]);
       }

@@ -40,10 +40,12 @@ default:
       -
         id: 'test'
         url: 'http://my-elasticsearch-host/_search'
-        query: ' AND environment:"test"'
+        queryAddition: ' AND environment:"test"'
+        queries:
+          - 'errors'
       -
         id: 'qa'
         url: 'http://my-elasticsearch-host/_search'
-        query: ' AND environment:"qa"'
+        queryAddition: ' AND environment:"qa"'
         targets:
           jobruns: 5-100

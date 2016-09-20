@@ -42,6 +42,8 @@ Create file `config.yml` in the root of the project and configure as described b
 
 You can find an example [here](example-config.yml)
 
+If you do not configure one of the areas, it will just be ignored, so you do not have to use all of these tools.
+
 ### Team message
 (This does not require configuration)
 
@@ -117,6 +119,8 @@ default:
       -
         id: 'qa'
         url: 'http://...:9200/_search'
+        queries:
+          - 'errors'
     queries:
       -
         id: 'errors'
@@ -132,7 +136,9 @@ default:
 ```
 By default, the count will always be based on the last one hour. You can overwrite that default with attribute `timeSpan`, filled with a time value that ElasticSearch will understand in a "gte" query (e.g. 'now-12h').
 
-If you need specific additions to your queries based on the environment, specify an additional `query` value for the environment as well.
+If you need specific additions to your queries based on the environment, specify an additional `queryAddition` value for the environment as well.
+
+You can also limit the queries for one environment to a specific set by providing `queries`.
 
 See [example config file](example-config.yml) for examples.
 

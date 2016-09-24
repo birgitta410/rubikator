@@ -27,15 +27,11 @@ function environmentReader() {
         defer.resolve(body);
       }
     });
-
     return defer.promise;
-
   }
-
 
   var parseHealthCheck = function(result, pattern) {
     var buildVersionFromHealth = new RegExp(pattern, 'g');
-
     var matchBuildVersion = buildVersionFromHealth.exec(result);
 
     if(matchBuildVersion && matchBuildVersion.length >= 2) {
@@ -43,7 +39,6 @@ function environmentReader() {
         value: matchBuildVersion[1],
         status: 'OK'
       };
-
     } else {
       return {
         status: 'NOT OK'
@@ -104,7 +99,7 @@ function environmentReader() {
 
   return {
     checkHealthAndUpdateClients: checkHealthAndUpdateClients
-  }
+  };
 
 }
 

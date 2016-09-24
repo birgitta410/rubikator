@@ -1,0 +1,24 @@
+{
+  "parser": "babel-eslint",
+
+  "extends": "airbnb",
+
+  "rules": {
+    "comma-dangle": 0,
+    "no-console": 1,
+    "max-len": [2, 150],
+    "keyword-spacing": 0,
+    "padded-blocks": 0
+  },
+
+  "env": {
+    "es6": true,
+    "browser": true,
+    "jasmine": true
+  },
+  "globals": {
+    "inject": true,
+    "jQuery": true,
+    "$": true
+  }
+}

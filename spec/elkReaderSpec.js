@@ -1,8 +1,10 @@
 const proxyquire = require('proxyquire');
 
-describe('elkReader', function () {
+describe('elkReader', () => {
 
-  var elkReader, requestMock, mockConfigData = {
+  let elkReader;
+  let requestMock;
+  const mockConfigData = {
     queries: [{
       id: 'errors',
       description: 'ERROR',
@@ -11,7 +13,7 @@ describe('elkReader', function () {
       type: 'ERROR'
     }, {
       id: 'warnings',
-      description: "WARNINGS",
+      description: 'WARNINGS',
       query: 'level:"ERROR"',
       type: 'WARN'
     }],
@@ -26,34 +28,34 @@ describe('elkReader', function () {
     }]
   };
 
-  beforeEach(function() {
+  beforeEach(() => {
     requestMock = jasmine.createSpy('request');
-    var getConfigMock = jasmine.createSpy('get config');
+    const getConfigMock = jasmine.createSpy('get config');
     getConfigMock.and.returnValue(mockConfigData);
     const configMock = {
-      create: function() {
+      create: () => {
         return {
           get: getConfigMock
-        }
+        };
       }
-    }
+    };
     elkReader = proxyquire('../server/elkReader', {
       'request': requestMock,
       './ymlHerokuConfig': configMock
     });
   });
 
-  function mockRequestAndGetOptions(num, data) {
+  const mockRequestAndGetOptions = (num, data) => {
     const requestArgs = requestMock.calls.argsFor(num);
     requestArgs[1](undefined, {}, data);
     return requestArgs[0];
-  }
+  };
 
-  it('should create a request based on configuration data', function () {
-    var baseTime = new Date(2015, 0, 1);
+  it('should create a request based on configuration data', () => {
+    const baseTime = new Date(2015, 0, 1);
     jasmine.clock().mockDate(baseTime);
 
-    var whenElkDataReceived = elkReader.getElkData();
+    elkReader.getElkData();
 
     const requestOptionsEnvironment1 = mockRequestAndGetOptions(0, '{"hits": { "total": 2 } }');
     const requestOptionsEnvironment2 = mockRequestAndGetOptions(2, '{"hits": { "total": 2 } }');
@@ -63,18 +65,18 @@ describe('elkReader', function () {
 
     const requestBody = JSON.parse(requestOptionsEnvironment1.body);
     expect(requestBody.query.query_string.query).toBe('level:"ERROR"  AND HOSTNAME:"PROD"');
-    expect(requestBody.filter.range["@timestamp"].gte).toBe('now-2h');
+    expect(requestBody.filter.range['@timestamp'].gte).toBe('now-2h');
 
   });
 
-  it('should combine the response data to expected metrics data', function (done) {
-    var whenElkDataReceived = elkReader.getElkData();
+  it('should combine the response data to expected metrics data', (done) => {
+    const whenElkDataReceived = elkReader.getElkData();
 
-    const requestOptions = mockRequestAndGetOptions(0, '{"hits": { "total": 2 } }');
+    mockRequestAndGetOptions(0, '{"hits": { "total": 2 } }');
     mockRequestAndGetOptions(1, '{"hits": { "total": 2 } }');
     mockRequestAndGetOptions(2, '{"hits": { "total": 2 } }');
 
-    whenElkDataReceived.then(function(result) {
+    whenElkDataReceived.then((result) => {
       const envId = mockConfigData.environments[0].id;
       const queryId = mockConfigData.queries[0].id;
 

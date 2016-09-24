@@ -1,43 +1,41 @@
 
-var http = require('http');
-var _ = require('lodash');
-var Q = require('q');
-var request = require('request');
-var configReader = require('./ymlHerokuConfig');
-var logger = require('./logger');
-var moment = require('moment');
+const _ = require('lodash');
+const Q = require('q');
+const request = require('request');
+const configReader = require('./ymlHerokuConfig');
+const logger = require('./logger');
+const moment = require('moment');
 
-function elkReader() {
+const elkReader = () => {
 
-  var logsConfig = configReader.create('logs').get();
+  const logsConfig = configReader.create('logs').get();
 
-  function parseUrl(urlPattern) {
-    return urlPattern.replace('${date}', moment().format('YYYY.MM.DD'));
-  }
+  const parseUrl = (urlPattern) =>
+    urlPattern.replace('${date}', moment().format('YYYY.MM.DD'));
 
-  function countLogs(queryConfig, url, environment) {
-    var queryAddendum = environment.queryAddition;
-    var environmentTarget = environment.targets ? environment.targets[queryConfig.id] : undefined;
+  const countLogs = (queryConfig, url, environment) => {
+    const queryAddendum = environment.queryAddition;
+    const environmentTarget = environment.targets ? environment.targets[queryConfig.id] : undefined;
 
-    logger.debug("Sending query", JSON.stringify(queryConfig), "to", url);
-    var identifier = queryConfig.id;
+    logger.debug('Sending query', JSON.stringify(queryConfig), 'to', url);
+    const identifier = queryConfig.id;
 
-    var defer = Q.defer();
+    const defer = Q.defer();
 
-    var requestOptions = {
+    const requestOptions = {
       method: 'GET',
       body: JSON.stringify({
-        "query": {
-          "query_string": {
-            "query": queryConfig.query + (queryAddendum ? ' ' + queryAddendum : ''),
-            "analyze_wildcard": true
+        query: {
+          query_string: {
+            query: queryConfig.query + (queryAddendum ? ' ' + queryAddendum : ''),
+            analyze_wildcard: true
           }
         },
-        "filter": {
-          "range" : {
-            "@timestamp" : {
-              "gte" : queryConfig.timeSpan ? queryConfig.timeSpan : "now-1h",
-              "lt" :  "now"
+        filter: {
+          range: {
+            '@timestamp': {
+              gte: queryConfig.timeSpan ? queryConfig.timeSpan : 'now-1h',
+              lt: 'now'
             }
           }
         }
@@ -45,99 +43,89 @@ function elkReader() {
       url: parseUrl(url)
     };
 
-    function targetIsMet(environmentTarget, totalHits) {
+    const targetIsMet = (totalHits) => {
       if(environmentTarget === undefined) {
         return undefined;
       }
-      var range = (environmentTarget + "").split("-");
+      const range = (environmentTarget + '').split('-');
       if(range.length === 1) {
         return totalHits === Number(range[0]);
-      } else if (range.length === 2 && range[1] === "*") {
+      } else if (range.length === 2 && range[1] === '*') {
         return totalHits >= Number(range[0]);
       } else if (range.length === 2) {
         return totalHits >= Number(range[0]) && totalHits <= Number(range[1]);
       }
-    }
+      return undefined;
+    };
 
-    request(requestOptions, function (error, response, body) {
+    request(requestOptions, (error, response, body) => {
       if(error) {
-        console.log("ERROR", 'failed to get ' + requestOptions.url, error);
+        console.log('ERROR', 'failed to get ' + requestOptions.url, error);
         defer.resolve(undefined);
       } else {
-        var result = JSON.parse(body);
-        var metric = {};
+        const result = JSON.parse(body);
+        const metric = {};
 
-        var totalHits = result.hits ? result.hits.total || 0 : '?';
+        const totalHits = result.hits ? result.hits.total || 0 : '?';
 
         metric[identifier] = {
           hits: totalHits,
           description: queryConfig.description,
           type: queryConfig.type,
           target: environmentTarget,
-          targetIsMet: targetIsMet(environmentTarget, totalHits)
+          targetIsMet: targetIsMet(totalHits)
         };
         if(result.hits === undefined) {
-          console.log("WARNING", "No hits for", requestOptions.url, queryConfig.query);
+          console.log('WARNING', 'No hits for', requestOptions.url, queryConfig.query);
         }
         defer.resolve(metric);
       }
     });
-
     return defer.promise;
+  };
 
-  }
+  const getData = () =>
+    Q.all(_.map(logsConfig.environments, (environment) => {
+      const url = environment.url;
 
-  var getData = function() {
+      const queriesForEnvironment = environment.queries
+        ? _.filter(logsConfig.queries, (query) => _.includes(environment.queries, query.id))
+        : logsConfig.queries;
 
-    return Q.all(_.map(logsConfig.environments, function(environment) {
-      var url = environment.url;
-
-      var queriesForEnvironment = environment.queries ? _.filter(logsConfig.queries, function(query) {
-        return _.includes(environment.queries, query.id);
-      }) : logsConfig.queries;
-
-      var queryPromises = _.map(queriesForEnvironment, function(queryConfig) {
+      const queryPromises = _.map(queriesForEnvironment, (queryConfig) => {
         return countLogs(queryConfig, url, environment);
       });
 
-      return Q.all(queryPromises).then(function(metricsForEnvironment) {
-        var result = {};
-        _.each(metricsForEnvironment, function(metric) {
+      return Q.all(queryPromises).then((metricsForEnvironment) => {
+        let result = {};
+        _.each(metricsForEnvironment, (metric) => {
           result = _.extend(result, metric);
         });
 
-        var resultForOneEnvironment = {};
+        const resultForOneEnvironment = {};
         resultForOneEnvironment[environment.id] = result;
         return resultForOneEnvironment;
 
       });
-    })).then(function(envMetrics) {
-      var resultForAllEnvironments = {};
-      _.each(_.compact(envMetrics), function(envMetric) {
+    })).then((envMetrics) => {
+      let resultForAllEnvironments = {};
+      _.each(_.compact(envMetrics), (envMetric) => {
         resultForAllEnvironments = _.extend(resultForAllEnvironments, envMetric);
       });
       return resultForAllEnvironments;
-    }).fail(function(error) {
-      console.log("ERROR GETTING METRICS", error);
+    }).fail((error) => {
+      console.log('ERROR GETTING METRICS', error);
     });
 
+  const getElkData = () => {
+    return getData()
+      .then((metricsData) => metricsData)
+      .fail((error) => { return { error: error }; });
   };
-
-  function getElkData() {
-    return getData().then(function (metricsData) {
-      return metricsData;
-
-    }).fail(function(error) {
-      console.log("COULD NOT CHECK LOG METRICS!", error);
-      return {error: error};
-    });
-
-  }
 
   return {
     getElkData: getElkData
   };
-
-}
+};
 
 exports.getElkData = elkReader().getElkData;

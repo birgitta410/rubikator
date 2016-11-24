@@ -120,3 +120,6 @@ function processGocd(data) {
 new DataSource('gocd', processGocd, onConnectionLost, onDataError);
 
 
+// TODO: Rename GocdVisualiser to BuildStatusVisualiser
+var teamcity = GocdVisualiser(rubikVis);
+new DataSource('teamcity', teamcity.processNewData, onConnectionLost, onDataError);

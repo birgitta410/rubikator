@@ -28,7 +28,6 @@ var GocdVisualiser = function(rubikVisualiser) {
 
     // CURRENT ACTIVITY
     _.each(data, function(pipelineState) {
-
       _.each(pipelineState.activity, function(activity) {
 
         if(cell % maxColumns === 0) {
@@ -59,7 +58,6 @@ var GocdVisualiser = function(rubikVisualiser) {
     var historyIndex = 0;
     // HISTORY
     _.each(data, function(pipelineState) {
-
       _.each(_.compact(pipelineState.history.boxes), function(history) {
         if(cell % maxColumns === 0 || historyIndex === 0) {
           row++;
@@ -70,13 +68,16 @@ var GocdVisualiser = function(rubikVisualiser) {
         newColumn.addClass("content");
         newColumn.addClass(rubikVisualiser.randomWarmColor());
 
+        var lastSuccessValue = pipelineState.history.statistics.timeSinceLastSuccess.human;
+        var lastSuccess = lastSuccessValue ? '</br><span class="detail">Last success: ' +
+          pipelineState.history.statistics.timeSinceLastSuccess.human : '';
+
         var boxText =
           '<img class="gif float" src="' + data[0].fail +'"/>' +
           '<span class="heading">' + pipelineState.pipeline + '</span>' +
           '</br>' +
           history.summary.result +
-          '</br><span class="detail">Last success: ' +
-          pipelineState.history.statistics.timeSinceLastSuccess.human +
+          lastSuccess +
           '</span></br><span class="detail">' + history.summary.text.substr(0, 65) + (history.summary.text.length > 65 ? '...' : '') + '</span>';
 
         $('<div>' + boxText + '</div>').appendTo(newColumn);

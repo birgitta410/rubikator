@@ -97,7 +97,14 @@ function dashboardServer() {
   var server = createServer();
   console.log((USES_SSL ? 'https' : 'http') + ' server listening on %d', port);
 
-  webSocketDataSource('gocd', require('./server/gocdReader').getGocdData, server, CHECK_FOR_CONFIG_FIRST);
+  (function buildStatusDataSource() {
+    if(configReader.create('gocd').get() !== undefined) {
+      webSocketDataSource('gocd', require('./server/gocdReader').getGocdData, server, CHECK_FOR_CONFIG_FIRST);
+    } else if(configReader.create('teamcity').get() !== undefined) {
+      webSocketDataSource('teamcity', require('./server/teamCityReader').getActivity, server, CHECK_FOR_CONFIG_FIRST);
+    }
+  })();
+
   webSocketDataSource('environments', require('./server/environmentReader').checkHealthAndUpdateClients, server, CHECK_FOR_CONFIG_FIRST);
   webSocketDataSource('logs', require('./server/elkReader').getElkData, server, CHECK_FOR_CONFIG_FIRST);
   webSocketDataSource('messenger', require('./server/messenger').getMessage, server);

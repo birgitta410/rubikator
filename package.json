@@ -9,21 +9,22 @@
     "gocd-api": "git://github.com/birgitta410/gocd-api.git#WIP",
     "lodash": "^4.12.0",
     "moment": "^2.9.0",
-    "node-yaml-config": "0.0.2",
+    "node-yaml-config": "0.0.4",
     "q": "^1.3.0",
     "request": "^2.55.0",
-    "ws": "^0.7.1"
+    "ws": "^1.1.1"
   },
   "engines": {
     "node": "0.10.35"
   },
   "devDependencies": {
-    "babel-eslint": "^6.1.2",
-    "eslint": "2.2.0",
-    "eslint-config-airbnb": "6.1.0",
+    "babel-eslint": "^7.1.1",
+    "eslint": "3.10.2",
+    "eslint-config-airbnb": "13.0.0",
     "eslint-loader": "^1.4.1",
-    "eslint-plugin-react": "4.2.1",
+    "eslint-plugin-react": "6.7.1",
     "jasmine": "^2.5.1",
-    "proxyquire": "^1.7.10"
+    "proxyquire": "^1.7.10",
+    "xml2json": "^0.10.0"
   }
 }

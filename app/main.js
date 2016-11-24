@@ -71,6 +71,27 @@ var RubikVisualisation = function() {
     return $('<div class="content flex-column detail"></div>').appendTo(parent);
   }
 
+  var SUPPORTED_CHARS = {
+    '0': '0', '1': '1', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+    'a': 'a', 'b': 'b', 'c': 'c', 'd': 'd', 'e': 'e', 'f': 'f',
+    'o': 'o', 'r': 'r', 's': 's',
+    'A': 'A_', 'B': 'B_', 'C': 'C_', 'D': 'D_', 'E': 'E_', 'F': 'F_', 'O': 'O_', 'R': 'R_', 'S': 'S_',
+    '.': 'dot'
+  };
+
+  function textToSvgs(text) {
+    const widthPercentage = 100 / text.toString().length;
+    const style = ' style="max-width: ' + widthPercentage + '%"'
+    return _.map(text.toString(), function(char) {
+      console.log(`CHAR ${char}`);
+      var fileName = SUPPORTED_CHARS[char];
+      if(fileName === undefined) {
+          return '<img src="img/asterisk.svg"' + style + '>';
+      }
+      return '<img src="img/' + fileName + '.svg"' + style + '>';
+    }).join('');
+  }
+
   return {
     randomColdColor: randomColdColor,
     randomWarmColor: randomWarmColor,
@@ -80,7 +101,8 @@ var RubikVisualisation = function() {
     createNewMainRow: createNewMainRow,
     createNewRow: createNewRow,
     createNewColumn: createNewColumn,
-    createContentBoxSmall: createContentBoxSmall
+    createContentBoxSmall: createContentBoxSmall,
+    textToSvgs: textToSvgs
   };
 
 };
@@ -118,5 +140,3 @@ function processGocd(data) {
   gocdFocus.processNewData(data);
 }
 new DataSource('gocd', processGocd, onConnectionLost, onDataError);
-
-

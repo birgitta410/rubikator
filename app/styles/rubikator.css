@@ -149,9 +149,19 @@ div {
 
 .content .metric {
     font-size: 2rem;
+    -webkit-box-flex: 5;
+    -moz-box-flex: 5;
+    -webkit-flex: 5;
+    -ms-flex: 5;
+    flex: 5;
 }
 .content .metric-description {
     font-size: 0.7rem;
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
 }
 
 .content .detail {

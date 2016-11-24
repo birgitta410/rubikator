@@ -23,8 +23,8 @@ var EnvironmentsVisualiser = function(rubikVisualiser) {
         var color = checkResult.status === 'OK' ? 'green' : 'red';
         outerBox.addClass(color);
         $('<div>' +
-          checkResult.id + '</br>' +
-          (checkResult.value || '-')+ '</div>').appendTo(outerBox);
+          checkResult.id + '</br><div class="flex-row metric">' +
+          (rubikVisualiser.textToSvgs(checkResult.value) || '-')+ '</div></div>').appendTo(outerBox);
 
       }
 

@@ -5,7 +5,7 @@ class SimulateElkStats < WEBrick::HTTPServlet::AbstractServlet
   def do_GET request, response
     response.status = 200
     response['Content-Type'] = 'application/json'
-    response.body = '{"hits": { "total": 2 } }'
+    response.body = '{"hits": { "total": 5678 } }'
   end
 end
 

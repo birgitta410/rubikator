@@ -82,7 +82,12 @@ describe('teamCityReader', () => {
       state: "finished",
       statusText: "tests passed: 750",
       buildType: {
-        id: "project1_compileStep", name: "compileStep", projectName: "Group :: Subgroup", projectId: "project1"
+        id: "project1_compileStep", name: "compile the code", projectName: "Group :: Subgroup", projectId: "project1"
+      },
+      lastChanges: {
+        change: [{
+          username: 'user.name'
+        }]
       },
       queuedDate: "20161128T155712+0100",
       startDate: "20161128T155718+0100"
@@ -102,7 +107,8 @@ describe('teamCityReader', () => {
       expect(firstProject.activity).toEqual([ aBuildingStage ]);
 
       var failedHistory = firstProject.history.boxes[0];
-      expect(failedHistory.summary.text).toBeDefined();
+      expect(failedHistory.title).toEqual('Group :: Subgroup</br> :: compile the code');
+      expect(failedHistory.summary.text).toEqual('Changes by user.name');
       expect(failedHistory.summary.result).toEqual('failed');
       expect(firstProject.history.pipelineName).toEqual('project1');
 

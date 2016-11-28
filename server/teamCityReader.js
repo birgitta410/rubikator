@@ -37,7 +37,7 @@ console.log("calling", url);
 function returnFailedBuild(buildEntry, error) {
   logger.error(`Build Request Error ${error}`);
   return {
-    status: 'FAILURE',
+    status: 'SUCCESS',
     name: `${buildEntry.name} (Teamcity Request Error)`
   };
 }
@@ -82,20 +82,20 @@ function getBuilds(teamcityResult) {
     });
 }
 
-function extractBuildInfo(build) {
+function extractBuildInfo(build, projectName) {
   const user = build.lastChanges && build.lastChanges.change && build.lastChanges.change[0];
   const buildType = build.buildType || build;
   return {
-    name: buildType.name,
-    info2: user && `(${user.username})`,
+    name: projectName + '</br> :: ' + buildType.name,
+    info2: user && `Changes by ${user.username}`,
     relevantForDisplay: true
   };
 }
 
-function filterFailedJobs(builds) {
+function filterFailedJobs(builds, projectName) {
   return builds
     .filter(build => build.status === 'FAILURE') // TODO: build.build or just build?!
-    .map(extractBuildInfo);
+    .map(build => extractBuildInfo(build, projectName));
 }
 
 function jobsByStatus(projectInfo) {
@@ -104,8 +104,8 @@ function jobsByStatus(projectInfo) {
     .then(getBuilds)
     .then(allBuilds => {
       return [
-        filterFailedJobs(allBuilds),
-        allBuilds.map(extractBuildInfo)
+        filterFailedJobs(allBuilds, projectInfo.name),
+        allBuilds.map(build => extractBuildInfo(build, projectInfo.name))
       ];
     }).then(filteredJobs => {
       return { failed: filteredJobs[0], all: filteredJobs[1], projectId: projectInfo.id, name: projectInfo.name };
@@ -140,7 +140,7 @@ function getActivity() {
           activity: mapped,
           history: {
             boxes: jobs.failed.map(job => {
-              return { summary: { text: `${job.name}</br>${job.info2}`, result: 'failed' } };
+              return { title: job.name, summary: { text: `${job.info2 || ''}`, result: 'failed' } };
             }),
             pipelineName: jobs.projectId,
             statistics: { timeSinceLastSuccess: {} }

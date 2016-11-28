@@ -74,7 +74,7 @@ var GocdVisualiser = function(rubikVisualiser) {
 
         var boxText =
           '<img class="gif float" src="' + data[0].fail +'"/>' +
-          '<span class="heading">' + pipelineState.pipeline + '</span>' +
+          '<span class="heading">' + (history.title || pipelineState.pipeline) + '</span>' +
           '</br>' +
           history.summary.result +
           lastSuccess +

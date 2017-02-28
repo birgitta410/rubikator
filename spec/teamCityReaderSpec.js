@@ -52,7 +52,7 @@ describe('teamCityReader', () => {
     });
   });
 
-  it('try it', (testDone) => {
+  it('map data into activity and history data', (testDone) => {
     var aBuildingStage = {
       name: "build name",
       activity: "Building",
@@ -68,12 +68,10 @@ describe('teamCityReader', () => {
       activity: { stages: [ aBuildingStage, aSleepingStage ] }
     }));
 
-    requestMockCalls[0] = `<buildTypes>
-      <buildType id="project1_compileStep" name="compileStep" projectName="Group :: Subgroup" projectId="project1"
-      href="/guestAuth/app/rest/buildTypes/id:project1_compileStep"
-      webUrl="https://teamcity.rz.is/viewType.html?buildTypeId=project1_compileStep"/>
-    </buildTypes>`;
-    requestMockCalls[1] = '<buildTypes></buildTypes>';
+    requestMockCalls[0] = {
+      buildType: [{id: "project1_compileStep", name: "compileStep", projectName: "Group :: Subgroup", projectId: "project1"}]
+    };
+    requestMockCalls[1] = { buildType: [] };
     requestMockCalls[2] = {
       id: "86945",
       buildTypeId: "project1_compileStep",
@@ -95,7 +93,6 @@ describe('teamCityReader', () => {
     var result = teamCityReader.getActivity();
 
     result.then((data) => {
-      console.log("result", data);
 
       expect(ccTrayReaderMock.readActivity).toHaveBeenCalledWith(
         ['Group :: Subgroup', 'Group :: AnotherSubgroup'], jasmine.any(Function)

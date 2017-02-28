@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 const Q = require('q');
-const xml2json = require('xml2json');
 const request = require('request');
 const logger = require('./logger');
 const configReader = require('./ymlHerokuConfig');
@@ -18,16 +17,17 @@ function getPropertiesForProject(projectId, suffix) {
   const url = `${config.host}${suffix}?locator=affectedProject:(id:${projectId})`;
   const requestOptions = {
     url: url,
-    method: 'GET'
+    method: 'GET',
+    json: true
   };
 
-console.log("calling", url);
+  logger.debug("calling", url);
   request(requestOptions, (error, response, body) => {
     if(error) {
       logger.error('ERROR', 'failed to get ' + requestOptions.url, error);
       defer.reject();
     } else {
-      defer.resolve(xml2json.toJson(body));
+      defer.resolve(body);
     }
   });
 
@@ -46,6 +46,7 @@ function getBuild(id) {
   const defer = Q.defer();
   const url = `${config.host}buildTypes/id:${id}/builds/lookupLimit:1`;
 
+  logger.debug("calling", url);
   request({
     url: url,
     method: 'GET',
@@ -64,13 +65,13 @@ function getBuild(id) {
 
 function getBuilds(teamcityResult) {
 
-  const types = JSON.parse(teamcityResult).buildTypes;
+  const types = teamcityResult;
 
-  if(types.buildType === undefined) {
+  if(teamcityResult.buildType === undefined) {
     return Q.all([]);
   }
 
-  const buildTypeEntries = [].concat(types.buildType); // xml2json problem with arrays length 1...
+  const buildTypeEntries = [].concat(teamcityResult.buildType);
   const builds = _.compact(_.map(buildTypeEntries, entry => {
     if(entry.paused) return;
     return getBuild(entry.id).catch(_.curry(returnFailedBuild)(entry));

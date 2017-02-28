@@ -1,5 +1,5 @@
 {
-  "name": "sf-dashboard",
+  "name": "rubikator",
   "version": "0.0.2",
   "scripts": {
     "test": "jasmine"
@@ -14,9 +14,6 @@
     "request": "^2.55.0",
     "ws": "^1.1.1"
   },
-  "engines": {
-    "node": "0.10.35"
-  },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "eslint": "3.10.2",
@@ -24,7 +21,6 @@
     "eslint-loader": "^1.4.1",
     "eslint-plugin-react": "6.7.1",
     "jasmine": "^2.5.1",
-    "proxyquire": "^1.7.10",
-    "xml2json": "^0.10.0"
+    "proxyquire": "^1.7.10"
   }
 }

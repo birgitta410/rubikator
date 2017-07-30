@@ -1,6 +1,8 @@
 Rubikator
 =======
 
+[![Build Status CircleCI](https://circleci.com/gh/birgitta410/rubikator.png?circle-token=e449bef47a235a4236277f300c8dce836408ea14)](https://circleci.com/gh/birgitta410/rubikator/)
+
 Information radiator for software build and environment status.
 
 Currently supports displaying information from:

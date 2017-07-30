@@ -1,0 +1,4 @@
+machine:
+  node:
+    version: v7.2.1
+

@@ -59,11 +59,15 @@ https://localhost:5555/messenger?message=Broke the build, sorry (bb)
 
 Syncing up the message might take a few seconds.
 
-### Access to Go CD
+### Build status
 
-The dashboard will only show the Go.CD stages that are either active (building, scheduled, ...) or failed. It will NOT show successful stages!
+The dashboard will only show build stages that are either active (building, scheduled, ...) or failed. It will NOT show successful stages!
 
-Animated gifs powered by [Giphy](https://github.com/Giphy/GiphyAPI). Change search terms [here](server/giphyReader.js).
+Animated gifs powered by [Giphy](https://github.com/Giphy/GiphyAPI). Change search terms [here](server/giphyReader.js). From experience, these are usually quite "safe for work", I have never had something REALLY inappropriate. No guarantees of course, as these come back from the giphy search. If a gif comes up that you don't want to see, you would have to restart the rubikator, as it caches the gifs to show for a while.
+
+Currently supports GoCD and TeamCity, either or.
+
+#### Go CD
 
 ```
 default:
@@ -76,6 +80,19 @@ default:
 For the security of your build server, please use Go.CD's SSL endpoint and a Go.CD user without operate or admin rights. This password will be in clear text in this config file...
 
 [This Go.CD documentation page](https://www.go.cd/documentation/user/current/configuration/dev_authorization.html) describes how to restrict a user's rights.
+
+#### TeamCity
+```
+teamcity:
+  host: 'http://the-teamcity-host/guestAuth/app/rest/'
+  ccTrayUrl: 'http://the-teamcity-host/guestAuth/app/rest/cctray/projects.xml'
+  projects:
+    -
+      id: 'Test'
+      name: 'test'
+```
+
+For this to work, you have to enable guest access in TeamCity as described [here](https://confluence.jetbrains.com/display/TCD10/REST+API#RESTAPI-RESTAuthentication).
 
 ### Environment health checks
 For each environment you want to monitor you can set multiple health checks. For each check, provide an identifier, a url, and a pattern to parse for a specific piece of information in that endpoint (e.g. the deployed build number). Be sure to put one grouping `()` into the regex, that value will be displayed on the monitor.

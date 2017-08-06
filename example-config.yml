@@ -4,6 +4,14 @@ default:
     url: https://my-gocd-host:8154
     user: horst
     password: horst-password
+  # OR:
+  #teamcity:
+    #host: 'http://my-teamcity-host/guestAuth/app/rest/'
+    #ccTrayUrl: 'http://my-teamcity-host/guestAuth/app/rest/cctray/projects.xml'
+    #projects:
+    #  -
+    #    id: 'Test'
+    #    name: 'test'
   environments:
     test:
       -

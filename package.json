@@ -5,6 +5,8 @@
     "test": "jasmine"
   },
   "dependencies": {
+    "blessed": "^0.1.81",
+    "blessed-contrib": "^4.7.5",
     "express": "4.15.3",
     "gocd-api": "git://github.com/birgitta410/gocd-api.git#WIP",
     "lodash": "4.17.4",

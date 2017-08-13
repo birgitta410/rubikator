@@ -1,7 +1,8 @@
 var blessed = require('blessed'),
   contrib = require('blessed-contrib'),
   Node = blessed.Node,
-  Canvas = contrib.canvas;
+  Canvas = contrib.canvas,
+  _ = require('lodash');
 
 // Started on basis of 'gauge' widget from blessed-contrib
 // Differences:
@@ -87,6 +88,13 @@ PipelineWidget.prototype.setPercentAndLabel = function(percentAndLabel) {
   if (this.options.showLabel) c.fillText(label, textX, 3)
 }
 
+function calcCharacterWidth(text) {
+  var lines = text.split('\n');
+  return _.max(_.map(lines, (l) => {
+    return l.length;
+  }));
+}
+
 PipelineWidget.prototype.setStack = function(stack) {
   var colors = ['green', 'magenta', 'cyan', 'red', 'blue'];
 
@@ -121,14 +129,20 @@ PipelineWidget.prototype.setStack = function(stack) {
 
     c.fillRect(leftStart, 2, width, 2)
 
-    textLeft = (width / 2) - (label.length / 2)//1;
-    // if (textLeft)
+    textLeft = (width / 2) - (calcCharacterWidth(label) / 2)//1;
     var textX = leftStart + textLeft
 
     if ((leftStart + width) < textX) {
       c.strokeStyle = 'normal'
     }
-    if (this.options.showLabel) c.fillText(label, textX, 3)
+    if (this.options.showLabel) {
+      var lines = label.split('\n');
+      var yOffset = lines.length >= 3 ? 2 : 3;
+      _.each(lines, (line, index) => {
+          c.fillText(line, textX, (index * 1) + yOffset)
+      })
+
+    }
 
     leftStart += width;
   }

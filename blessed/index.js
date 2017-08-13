@@ -5,7 +5,7 @@ let blessed = require('blessed'),
   pipeline = require('./pipeline-widget.js'),
   screen = blessed.screen({ log: 'log.log' });//, log: true });
 
-screen.log("Let's get started: ", screen.program);
+screen.log("Let's get started!");
 
 let actualConsole = console.log;
 let myLog = function() {
@@ -19,7 +19,7 @@ let myLog = function() {
 console.log = myLog;
 
 let grid = new contrib.grid({
-  rows: 2,
+  rows: 3,
   cols: 1,
   screen: screen
 });
@@ -31,27 +31,86 @@ let log = grid.set(0, 0, 1, 1, contrib.log, {
 });
 screen.append(log);
 
-let gauge = grid.set(1, 0, 1, 1, pipeline, {
+let gaugeActivities = grid.set(1, 0, 1, 1, pipeline, {
   label: 'ACTIVITY',
   fill: 'black'
 });
-screen.append(gauge);
+screen.append(gaugeActivities);
+
+let gaugeHistory = grid.set(2, 0, 1, 1, pipeline, {
+  label: 'HISTORY',
+  fill: 'black'
+});
+screen.append(gaugeHistory);
+
+screen.on('resize', function() {
+  gaugeActivities.emit('attach');
+  gaugeHistory.emit('attach');
+  log.emit('attach');
+});
 
 function render(gocdData) {
 
   let data = gocdData.historyAndActivity;
+  log.log("Data: " + JSON.stringify(data));
+
   let activities = _.chain(data)
     .map((pipelineState) => {
-      pipelineState.activity.pipeline = pipelineState.pipeline;
-      return pipelineState.activity;
+      return _.map(pipelineState.activity, (activity) => {
+        activity.pipeline = pipelineState.pipeline;
+        return activity;
+      });
     })
     .flatten()
     .value();
+  updateActivities(activities);
 
-  log.log("Data: " + JSON.stringify(data));
+  let histories = _.chain(data)
+    .map((pipelineState) => {
+      return _.map(_.compact(pipelineState.history.boxes), (history) => {
+        history.timeSinceLastSuccess = pipelineState.history.statistics.timeSinceLastSuccess.human;
+        history.title = history.title || pipelineState.pipeline;
+        return history;
+      });
+    })
+    .flatten()
+    .value();
+  updateHistory(histories);
 
-  // =====================================
+  screen.render();
+}
 
+function updateHistory(histories) {
+  let stackColors = [[190, 221, 234], [138, 113, 150], [193, 177, 191]];
+
+  var gaugeData = _.map(histories, function(history) {
+
+      var lastSuccess = history.timeSinceLastSuccess
+        ? ' (Last success: ' + history.timeSinceLastSuccess + ')'
+        : '';
+
+      var boxText =
+        (history.title || pipelineState.pipeline) + ': ' + history.summary.result
+        + lastSuccess
+        + '\n' + history.summary.text.substr(0, 65) + (history.summary.text.length > 65 ? '...' : '');
+      return {
+        label: boxText,
+        percent: 100/histories.length,
+        stroke: stackColors[2]
+      };
+    });
+
+  if(gaugeData.length === 0) {
+    gaugeData = [
+      {percent: 100, label: 'ALL GOOD!', stroke: stackColors[0]}
+    ];
+  }
+
+  gaugeHistory.setStack(gaugeData);
+
+}
+
+function updateActivities(activities) {
   let stackColors = [[190, 221, 234], [138, 113, 150], [193, 177, 191]];
 
   let gaugeData = _.map(activities, (activity, index) => {
@@ -72,8 +131,7 @@ function render(gocdData) {
     ];
   }
 
-  gauge.setStack(gaugeData);
-  screen.render();
+  gaugeActivities.setStack(gaugeData);
 }
 
 function update() {
